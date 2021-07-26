@@ -31,8 +31,8 @@ The config is located in `~/.gnupg/pinentry-dmenu.conf`.
 monitor = -1;
 bottom = false;
 embedded = false;
-line_height = 26;
-border_width = 0;
+line_height = 22;
+border_width = 2;
 font = "DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true";
 min_password_length = 32;
 asterisk= "*";
