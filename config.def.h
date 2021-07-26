@@ -7,6 +7,7 @@ static int embedded = 0;
 static int minpwlen = 32;
 
 static unsigned int lineheight = 26;
+static unsigned int borderwidth = 0;
 
 static const char *fonts[] = {
 	"DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true"
