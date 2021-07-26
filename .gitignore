@@ -1,0 +1,15 @@
+# path:   /home/klassiker/.local/share/repos/pinentry-dmenu/.gitignore
+# author: klassiker [mrdotx]
+# github: https://github.com/mrdotx/pinentry-dmenu
+# date:   2021-07-26T13:12:54+0200
+
+/pinentry/argparse.o
+/pinentry/password-cache.o
+/pinentry/pinentry.o
+/pinentry/secmem.o
+/pinentry/util.o
+/config.h
+/drw.o
+/pinentry-dmenu
+/pinentry-dmenu.o
+/util.o

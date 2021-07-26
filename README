@@ -1,0 +1,49 @@
+pinentry-dmenu
+==============
+
+pinentry-dmenu is a pinentry program with the charm of dmenu.
+
+This program is a fork from https://gitgud.io/zavok/spine.git
+which is also a fork from https://tools.suckless.org/dmenu.
+
+
+Requirements
+------------
+In order to build dmenu you need the Xlib header files.
+
+
+Installation
+------------
+Edit config.mk to match your local setup (dmenu is installed into
+the /usr/local namespace by default).
+
+Afterwards enter the following command to build and install dmenu
+(if necessary as root):
+
+	make clean install
+
+
+Config
+------
+To use pinentry-dmenu add in `~/.gnupg/gpg-agent.conf`:
+
+	pinentry-program <absolut path to pinentry-dmenu>
+
+The config is located in `~/.gnupg/pinentry-dmenu.conf`.
+
+monitor = -1;
+bottom = false;
+embedded = false;
+line_height = 26;
+font = "DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true";
+min_password_length = 32;
+asterisk= "*";
+prompt = "";
+prompt_fg = "#cccccc";
+prompt_bg = "#4185d7";
+normal_fg = "#cccccc";
+normal_bg = "#000000";
+select_fg = "#ffffff";
+select_bg = "#4185d7";
+desc_fg = "#cccccc";
+desc_bg = "#4185d7";
