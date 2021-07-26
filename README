@@ -1,16 +1,14 @@
 pinentry-dmenu
 ==============
 
-pinentry-dmenu is a pinentry program with the charm of dmenu.
+pinentry-dmenu is a pinentry program based on dmenu.
 
 This program is a fork from https://gitgud.io/zavok/spine.git
 which is also a fork from https://tools.suckless.org/dmenu.
 
-
 Requirements
 ------------
 In order to build dmenu you need the Xlib header files.
-
 
 Installation
 ------------
@@ -21,7 +19,6 @@ Afterwards enter the following command to build and install dmenu
 (if necessary as root):
 
 	make clean install
-
 
 Config
 ------
