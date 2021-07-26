@@ -351,9 +351,11 @@ setup(void) {
 	swa.override_redirect = True;
 	swa.background_pixel = scheme[SchemePrompt][ColBg].pixel;
 	swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask;
-	win = XCreateWindow(dpy, parentwin, x, y, mw, mh, 0,
+	win = XCreateWindow(dpy, parentwin, x, y, mw, mh, borderwidth,
 	                    CopyFromParent, CopyFromParent, CopyFromParent,
 	                    CWOverrideRedirect | CWBackPixel | CWEventMask, &swa);
+	if (borderwidth)
+		XSetWindowBorder(dpy, win, scheme[SchemeSelect][ColBg].pixel);
 
 	/* Open input methods */
 	xim = XOpenIM(dpy, NULL, NULL, NULL);
@@ -747,6 +749,9 @@ main(int argc, char *argv[]) {
 		}
 		if (config_lookup_int(&cfg, "line_height", &val)) {
 			lineheight = val;
+		}
+		if (config_lookup_int(&cfg, "border_width", &val)) {
+			borderwidth = val;
 		}
 		if (config_lookup_string(&cfg, "font", &str)) {
 			fonts[0] = str;

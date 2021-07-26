@@ -37,6 +37,9 @@ Embed into window.
 .BI "line_height =" " 26"
 Defines menu line of at least 'line_height' pixels tall.
 .TP
+.BI "border_width =" " 0"
+Defines the border width for the menu.
+.TP
 .BI "font =" " DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true"
 Defines the font or font set used.
 .TP
@@ -191,7 +194,8 @@ Paste from primary X selection
 monitor = -1;
 bottom = false;
 embedded = false;
-lineheight = 26;
+line_height = 26;
+border_width = 0;
 font = "DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true";
 min_passwword_length = 32;
 asterisk= "*";
