@@ -28,6 +28,9 @@ You can change the path to the config file with the environment variable
 .BI "monitor =" " -1"
 pinentry-dmenu is displayed on the monitor number supplied. Monitor numbers are starting from 0.
 .TP
+.BI "center =" " false"
+pinentry-dmenu appears in the center of the screen.
+.TP
 .BI "bottom =" " false"
 pinentry-dmenu appears at the bottom of the screen.
 .TP
@@ -192,12 +195,13 @@ Paste from primary X selection
 .\}
 .nf
 monitor = -1;
+center = false;
 bottom = false;
 embedded = false;
 line_height = 22;
 border_width = 2;
 font = "DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true";
-min_passwword_length = 32;
+min_password_length = 32;
 asterisk= "*";
 prompt = "";
 prompt_fg = "#cccccc";

@@ -330,9 +330,16 @@ setup(void) {
 			}
 		}
 
-		x = info[i].x_org;
-		y = info[i].y_org + (bottom ? info[i].height - mh : 0);
-		mw = info[i].width;
+		if (center) {
+			mw = info[i].width;
+			x = info[i].x_org + ((info[i].width  - mw) / 2);
+			y = info[i].y_org + ((info[i].height - mh) / 2);
+		} else {
+			x = info[i].x_org;
+			y = info[i].y_org + (bottom ? info[i].height - mh : 0);
+			mw = info[i].width;
+		}
+
 		XFree(info);
 	} else
 #endif
@@ -340,9 +347,16 @@ setup(void) {
 		if (!XGetWindowAttributes(dpy, parentwin, &wa)) {
 			die("could not get embedding window attributes: 0x%lx", parentwin);
 		}
-		x = 0;
-		y = bottom ? wa.height - mh : 0;
-		mw = wa.width;
+
+		if (center) {
+			mw = wa.width;
+			x = (wa.width  - mw) / 2;
+			y = (wa.height - mh) / 2;
+		} else {
+			x = 0;
+			y = bottom ? wa.height - mh : 0;
+			mw = wa.width;
+		}
 	}
 
 	pdescw = (pinentry_info->description) ? TEXTW(pinentry_info->description) : 0;
@@ -740,6 +754,9 @@ main(int argc, char *argv[]) {
 	if (config_read_file(&cfg, path)) {
 		if (config_lookup_int(&cfg, "monitor", &val)) {
 			mon = val;
+		}
+		if (config_lookup_bool(&cfg, "center", &bval)) {
+			center = bval;
 		}
 		if (config_lookup_bool(&cfg, "bottom", &bval)) {
 			bottom = bval;

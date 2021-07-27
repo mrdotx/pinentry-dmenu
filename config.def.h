@@ -2,10 +2,11 @@
 /* Default settings; can be overriden by command line. */
 
 static int mon = -1;
-static int bottom = 0;
-static int embedded = 0;
-static int minpwlen = 32;
 
+static unsigned int center = 0;
+static unsigned int bottom = 0;
+static unsigned int embedded = 0;
+static unsigned int minpwlen = 32;
 static unsigned int lineheight = 22;
 static unsigned int borderwidth = 2;
 
