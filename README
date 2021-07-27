@@ -29,6 +29,7 @@ To use pinentry-dmenu add in `~/.gnupg/gpg-agent.conf`:
 The config is located in `~/.gnupg/pinentry-dmenu.conf`.
 
 monitor = -1;
+center = false;
 bottom = false;
 embedded = false;
 line_height = 22;
