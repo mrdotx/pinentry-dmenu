@@ -1,6 +1,6 @@
 # Pinentry settings
 DATE      = $$(date +'%B %Y')
-VERSION   = 0.1.1
+VERSION   = 0.1.2
 BUGREPORT = https:\/\/github.com\/mrdotx\/pinentry-dmenu
 
 # Paths
