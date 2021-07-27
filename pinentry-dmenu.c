@@ -209,6 +209,10 @@ drawwin(void) {
 		x += ppromptw;
 	}
 
+	if (center) {
+		censortl /= 4;
+	}
+
 	if (pinentry_info->description) {
 		pb = mw - x;
 		pdesclen = strlen(pinentry_info->description);
@@ -331,7 +335,7 @@ setup(void) {
 		}
 
 		if (center) {
-			mw = info[i].width;
+			mw = MIN(centerwidth, info[i].width);
 			x = info[i].x_org + ((info[i].width  - mw) / 2);
 			y = info[i].y_org + ((info[i].height - mh) / 2);
 		} else {
@@ -349,7 +353,7 @@ setup(void) {
 		}
 
 		if (center) {
-			mw = wa.width;
+			mw = MIN(centerwidth, wa.width);
 			x = (wa.width  - mw) / 2;
 			y = (wa.height - mh) / 2;
 		} else {
@@ -757,6 +761,9 @@ main(int argc, char *argv[]) {
 		}
 		if (config_lookup_bool(&cfg, "center", &bval)) {
 			center = bval;
+		}
+		if (config_lookup_int(&cfg, "center_width", &val)) {
+			centerwidth = val;
 		}
 		if (config_lookup_bool(&cfg, "bottom", &bval)) {
 			bottom = bval;
