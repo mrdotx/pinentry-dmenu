@@ -20,6 +20,10 @@ Afterwards enter the following command to build and install dmenu
 
 	make clean install
 
+Running pinentry-dmenu
+----------------------
+See the man page for details.
+
 Config
 ------
 To use pinentry-dmenu add in `~/.gnupg/gpg-agent.conf`:
@@ -35,10 +39,10 @@ bottom = false;
 embedded = false;
 line_height = 22;
 border_width = 2;
-font = "DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true";
 min_password_length = 32;
-asterisk= "*";
+font = "DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true";
 prompt = "";
+asterisk= "*";
 prompt_fg = "#cccccc";
 prompt_bg = "#4185d7";
 normal_fg = "#cccccc";
