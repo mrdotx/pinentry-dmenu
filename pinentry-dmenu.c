@@ -13,6 +13,7 @@
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
+#include <X11/Xproto.h>
 #include <X11/Xutil.h>
 #ifdef XINERAMA
 #include <X11/extensions/Xinerama.h>
@@ -33,7 +34,6 @@
 #define LENGTH(X) (sizeof(X) / sizeof(X[0]))
 #define TEXTW(X) (drw_fontset_getwidth(drw, (X)) + lrpad)
 #define MINDESCLEN 8
-
 
 enum { SchemePrompt, SchemeNormal, SchemeSelect, SchemeDesc, SchemeLast };
 enum { WinPin, WinConfirm };
@@ -62,11 +62,18 @@ static XIC xic;
 static Drw *drw;
 static Clr *scheme[SchemeLast];
 
+static int useargb = 0;
+static Visual *visual;
+static int depth;
+static Colormap cmap;
+
 static int timed_out;
 static int winmode;
 pinentry_t pinentry_info;
 
 #include "config.h"
+
+static void xinitvisual();
 
 static int
 drawitem(const char* text, Bool sel, int x, int y, int w) {
@@ -274,7 +281,7 @@ drawwin(void) {
 
 static void
 setup(void) {
-	int x, y, i = 0;
+	int x, y, i = 0, j;
 	unsigned int du;
 	XSetWindowAttributes swa;
 	XIM xim;
@@ -283,14 +290,12 @@ setup(void) {
 #ifdef XINERAMA
 	XineramaScreenInfo *info;
 	Window pw;
-	int a, j, di, n, area = 0;
+	int a, di, n, area = 0;
 #endif
 
 	/* Init appearance */
-	scheme[SchemePrompt] = drw_scm_create(drw, colors[SchemePrompt], 2);
-	scheme[SchemeNormal] = drw_scm_create(drw, colors[SchemeNormal], 2);
-	scheme[SchemeSelect] = drw_scm_create(drw, colors[SchemeSelect], 2);
-	scheme[SchemeDesc]   = drw_scm_create(drw, colors[SchemeDesc],   2);
+	for (j = 0; j < SchemeLast; j++)
+		scheme[j] = drw_scm_create(drw, colors[j], alphas[j], 2);
 
 	clip = XInternAtom(dpy, "CLIPBOARD",   False);
 	utf8 = XInternAtom(dpy, "UTF8_STRING", False);
@@ -367,11 +372,13 @@ setup(void) {
 
 	/* Create menu window */
 	swa.override_redirect = True;
-	swa.background_pixel = scheme[SchemePrompt][ColBg].pixel;
+	swa.background_pixel = 0;
+	swa.border_pixel = 0;
+	swa.colormap = cmap;
 	swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask;
 	win = XCreateWindow(dpy, parentwin, x, y, mw, mh, borderwidth,
-	                    CopyFromParent, CopyFromParent, CopyFromParent,
-	                    CWOverrideRedirect | CWBackPixel | CWEventMask, &swa);
+	                    depth, CopyFromParent, visual,
+	                    CWOverrideRedirect | CWBackPixel | CWBorderPixel | CWColormap | CWEventMask, &swa);
 	if (borderwidth)
 		XSetWindowBorder(dpy, win, scheme[SchemeSelect][ColBg].pixel);
 
@@ -399,11 +406,11 @@ setup(void) {
 
 static void
 cleanup(void) {
+	size_t i;
+
 	XUngrabKey(dpy, AnyKey, AnyModifier, root);
-	free(scheme[SchemeDesc]);
-	free(scheme[SchemeSelect]);
-	free(scheme[SchemeNormal]);
-	free(scheme[SchemePrompt]);
+	for (i = 0; i < SchemeLast; i++)
+		free(scheme[i]);
 	drw_free(drw);
 	XSync(dpy, False);
 	XCloseDisplay(dpy);
@@ -687,7 +694,8 @@ cmdhandler(pinentry_t received_pinentry) {
 	if (!XGetWindowAttributes(dpy, parentwin, &wa)) {
 		die("could not get embedding window attributes: 0x%lx", parentwin);
 	}
-	drw = drw_create(dpy, screen, root, wa.width, wa.height);
+	xinitvisual();
+	drw = drw_create(dpy, screen, root, wa.width, wa.height, visual, depth, cmap);
 	if (!drw_fontset_create(drw, fonts, LENGTH(fonts))) {
 		die("no fonts could be loaded.");
 	}
@@ -813,6 +821,30 @@ main(int argc, char *argv[]) {
 		if (config_lookup_string(&cfg, "desc_bg", &str)) {
 			colors[SchemeDesc][ColBg] = str;
 		}
+		if (config_lookup_int(&cfg, "prompt_fg_alpha", &val)) {
+			alphas[SchemePrompt][0] = val;
+		}
+		if (config_lookup_int(&cfg, "prompt_bg_alpha", &val)) {
+			alphas[SchemePrompt][1] = val;
+		}
+		if (config_lookup_int(&cfg, "normal_fg_alpha", &val)) {
+			alphas[SchemeNormal][0] = val;
+		}
+		if (config_lookup_int(&cfg, "normal_bg_alpha", &val)) {
+			alphas[SchemeNormal][1] = val;
+		}
+		if (config_lookup_int(&cfg, "select_fg_alpha", &val)) {
+			alphas[SchemeSelect][0] = val;
+		}
+		if (config_lookup_int(&cfg, "select_bg_alpha", &val)) {
+			alphas[SchemeSelect][1] = val;
+		}
+		if (config_lookup_int(&cfg, "desc_fg_alpha", &val)) {
+			alphas[SchemeDesc][0] = val;
+		}
+		if (config_lookup_int(&cfg, "desc_bg_alpha", &val)) {
+			alphas[SchemeDesc][1] = val;
+		}
 	} else if ((str = config_error_file(&cfg))) {
 		fprintf(stderr, "%s:%d: %s\n", config_error_file(&cfg),
 		        config_error_line(&cfg), config_error_text(&cfg));
@@ -831,4 +863,41 @@ main(int argc, char *argv[]) {
 	config_destroy(&cfg);
 
 	return 0;
+}
+
+void
+xinitvisual()
+{
+	XVisualInfo *infos;
+	XRenderPictFormat *fmt;
+	int nitems;
+	int i;
+
+	XVisualInfo tpl = {
+		.screen = screen,
+		.depth = 32,
+		.class = TrueColor
+	};
+	long masks = VisualScreenMask | VisualDepthMask | VisualClassMask;
+
+	infos = XGetVisualInfo(dpy, masks, &tpl, &nitems);
+	visual = NULL;
+	for(i = 0; i < nitems; i ++) {
+		fmt = XRenderFindVisualFormat(dpy, infos[i].visual);
+		if (fmt->type == PictTypeDirect && fmt->direct.alphaMask) {
+			visual = infos[i].visual;
+			depth = infos[i].depth;
+			cmap = XCreateColormap(dpy, root, visual, AllocNone);
+			useargb = 1;
+			break;
+		}
+	}
+
+	XFree(infos);
+
+	if (! visual) {
+		visual = DefaultVisual(dpy, screen);
+		depth = DefaultDepth(dpy, screen);
+		cmap = DefaultColormap(dpy, screen);
+	}
 }

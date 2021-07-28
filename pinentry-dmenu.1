@@ -49,6 +49,35 @@ Defines the border width for the menu.
 .BI "min_password_length =" " 32"
 The minimal space of the password field. This value has affect to the description field after the password field.
 .TP
+.BI "prompt_fg_alpha =" " 255"
+Defines the prompt foreground alpha value.
+Values between
+.IR 0
+(transparent) and
+.IR 255
+(opaque) are supported.
+.TP
+.BI "prompt_bg_alpha =" " 255"
+Defines the prompt background alpha value.
+.TP
+.BI "normal_fg_alpha =" " 255"
+Defines the normal foreground alpha value.
+.TP
+.BI "normal_bg_alpha =" " 230"
+Defines the normal background alpha value.
+.TP
+.BI "select_fg_alpha =" " 255"
+Defines the selected foreground alpha value.
+.TP
+.BI "select_bg_alpha =" " 255"
+Defines the selected background alpha value.
+.TP
+.BI "desc_fg_alpha =" " 255"
+Defines the description foreground alpha value.
+.TP
+.BI "desc_bg_alpha =" " 255"
+Defines the description background alpha value.
+.TP
 .BI "font =" " DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true"
 Defines the font or font set used.
 .TP
@@ -205,6 +234,14 @@ embedded = false;
 line_height = 22;
 border_width = 2;
 min_password_length = 32;
+prompt_fg_alpha = 255;
+prompt_bg_alpha = 255;
+normal_fg_alpha = 255;
+normal_bg_alpha = 230;
+select_fg_alpha = 255;
+select_bg_alpha = 255;
+desc_fg_alpha = 255;
+desc_bg_alpha = 255;
 font = "DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true";
 prompt = "";
 asterisk= "*";
