@@ -17,20 +17,20 @@ SETREPEAT repeat
 GETPIN"
 
 case $1 in
-    1)
-        printf "%s\nBYE" "$prompt" \
-            | ./pinentry-dmenu
-        ;;
-    2)
-        printf "%s\nBYE" "$confirm" \
-            | ./pinentry-dmenu
-        ;;
-    3)
-        printf "%s\nBYE" "$repeat" \
-            | ./pinentry-dmenu
-        ;;
-    *)
-        printf "%s\n%s\n%s\nBYE" "$prompt" "$confirm" "$repeat" \
-            | ./pinentry-dmenu
-        ;;
+	1)
+		printf "%s\nBYE" "$prompt" \
+			| ./pinentry-dmenu
+		;;
+	2)
+		printf "%s\nBYE" "$confirm" \
+			| ./pinentry-dmenu
+		;;
+	3)
+		printf "%s\nBYE" "$repeat" \
+			| ./pinentry-dmenu
+		;;
+	*)
+		printf "%s\n%s\n%s\nBYE" "$prompt" "$confirm" "$repeat" \
+			| ./pinentry-dmenu
+		;;
 esac
