@@ -3,7 +3,7 @@
 
 static unsigned int mon = -1;
 static unsigned int center = 0;
-static unsigned int centerwidth = 750;
+static unsigned int centerwidth = 1024;
 static unsigned int bottom = 0;
 static unsigned int embedded = 0;
 static unsigned int lineheight = 22;
