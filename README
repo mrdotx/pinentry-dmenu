@@ -50,7 +50,7 @@ desc_fg_alpha = 255;
 desc_bg_alpha = 255;
 font = "DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true";
 prompt = "";
-asterisk= "*";
+asterisk = "*";
 prompt_fg = "#cccccc";
 prompt_bg = "#4185d7";
 normal_fg = "#cccccc";
