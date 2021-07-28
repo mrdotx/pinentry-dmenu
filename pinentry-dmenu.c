@@ -287,6 +287,7 @@ setup(void) {
 	XIM xim;
 	Window w, dw, *dws;
 	XWindowAttributes wa;
+	XClassHint ch = {"pinentry-dmenu", "prinentry-dmenu"};
 #ifdef XINERAMA
 	XineramaScreenInfo *info;
 	Window pw;
@@ -381,6 +382,7 @@ setup(void) {
 	                    CWOverrideRedirect | CWBackPixel | CWBorderPixel | CWColormap | CWEventMask, &swa);
 	if (borderwidth)
 		XSetWindowBorder(dpy, win, scheme[SchemeSelect][ColBg].pixel);
+	XSetClassHint(dpy, win, &ch);
 
 	/* Open input methods */
 	xim = XOpenIM(dpy, NULL, NULL, NULL);
