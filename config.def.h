@@ -11,7 +11,7 @@ static unsigned int borderwidth = 2;
 static unsigned int minpwlen = 32;
 static unsigned int alphas[SchemeLast][2] = {
 	/* values between 0 (transparent) and 255 (opaque) */
-	/*             foreground, background */
+	/*          foreground, background */
 	[SchemePrompt] = { 255, 255 },
 	[SchemeNormal] = { 255, 230 },
 	[SchemeSelect] = { 255, 255 },
