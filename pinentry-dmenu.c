@@ -48,6 +48,8 @@ static int lrpad;
 static size_t cursor;
 static int screen;
 
+static int bottom = 0, center = 0;
+
 static char* pin;
 static int pin_len;
 static char* pin_repeat;
@@ -147,7 +149,7 @@ grabkeyboard(void) {
 	 * we may have to wait for another process to ungrab */
 	for (i = 0; i < 1000; i++) {
 		if (XGrabKeyboard(dpy, DefaultRootWindow(dpy), True, GrabModeAsync,
-		                  GrabModeAsync, CurrentTime) == GrabSuccess) {
+						GrabModeAsync, CurrentTime) == GrabSuccess) {
 			return;
 		}
 		usleep(1000);
@@ -162,8 +164,8 @@ nextrune(int cursor, int inc) {
 
 	/* Return location of next utf8 rune in the given direction (+1 or -1) */
 	for (n = cursor + inc;
-	     n + inc >= 0 && (pin[n] & 0xc0) == 0x80;
-	     n += inc);
+		n + inc >= 0 && (pin[n] & 0xc0) == 0x80;
+		n += inc);
 
 	return n;
 }
@@ -272,7 +274,7 @@ drawwin(void) {
 
 				drw_setscheme(drw, scheme[SchemeDesc]);
 				if (center) {
-					drw_text(drw, ppromptw, lineheight, centerwidth,
+					drw_text(drw, promptw + ppromptw, lineheight, centerwidth,
 						bh + borderwidth, lrpad / 2,
 						pinentry_info->description, 0);
 				} else {
@@ -338,7 +340,7 @@ setup(void) {
 
 	/* Calculate menu geometry */
 	bh = drw->fonts->h + 2;
-	bh = MAX(bh,lineheight);    /* make a menu line AT LEAST 'lineheight' tall */
+	bh = MAX(bh,lineheight);	/* make a menu line AT LEAST 'lineheight' tall */
 	mh = (center) ? bh * 2 : bh;
 #ifdef XINERAMA
 	info = XineramaQueryScreens(dpy, &n);
@@ -367,7 +369,7 @@ setup(void) {
 		}
 		/* No focused window is on screen, so use pointer location instead */
 		if (mon < 0 && !area
-		    && XQueryPointer(dpy, root, &dw, &dw, &x, &y, &di, &di, &du)) {
+			&& XQueryPointer(dpy, root, &dw, &dw, &x, &y, &di, &di, &du)) {
 			for (i = 0; i < n; i++) {
 				if (INTERSECT(x, y, 1, 1, info[i])) {
 					break;
@@ -413,8 +415,8 @@ setup(void) {
 	swa.colormap = cmap;
 	swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask;
 	win = XCreateWindow(dpy, parentwin, x, y, mw, mh, borderwidth,
-	                    depth, CopyFromParent, visual,
-	                    CWOverrideRedirect | CWBackPixel | CWBorderPixel | CWColormap | CWEventMask, &swa);
+						depth, CopyFromParent, visual,
+						CWOverrideRedirect | CWBackPixel | CWBorderPixel | CWColormap | CWEventMask, &swa);
 	if (borderwidth)
 		XSetWindowBorder(dpy, win, scheme[SchemeSelect][ColBg].pixel);
 	XSetClassHint(dpy, win, &ch);
@@ -422,7 +424,7 @@ setup(void) {
 	/* Open input methods */
 	xim = XOpenIM(dpy, NULL, NULL, NULL);
 	xic = XCreateIC(xim, XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
-	                XNClientWindow, win, XNFocusWindow, win, NULL);
+					XNClientWindow, win, XNFocusWindow, win, NULL);
 	XMapRaised(dpy, win);
 
 	if (embedded) {
@@ -532,7 +534,7 @@ keypress_pin(XKeyEvent *ev, KeySym ksym, char* buf, int len) {
 			break;
 		case XK_v:
 			XConvertSelection(dpy, (ev->state & ShiftMask) ? clip : XA_PRIMARY,
-			                  utf8, utf8, win, CurrentTime);
+									utf8, utf8, win, CurrentTime);
 			return 0;
 		case XK_Return:
 		case XK_KP_Enter:
@@ -624,7 +626,7 @@ paste(void) {
 
 	/* We have been given the current selection, now insert it into input */
 	XGetWindowProperty(dpy, win, utf8, 0, pin_len / 4, False, utf8, &da, &di,
-	                   &dl, &dl, (unsigned char **)&p);
+						&dl, &dl, (unsigned char **)&p);
 	insert(p, (q = strchr(p, '\n')) ? q - p : (ssize_t) strlen(p));
 	XFree(p);
 	drawwin();
@@ -753,7 +755,7 @@ cmdhandler(pinentry_t received_pinentry) {
 		do {
 			password();
 		} while (!pinentry_info->canceled && pinentry_info->repeat_passphrase
-		                             && !pinentry_info->repeat_okay);
+				&& !pinentry_info->repeat_okay);
 	} else {
 		confirm();
 	}
@@ -804,14 +806,8 @@ main(int argc, char *argv[]) {
 		if (config_lookup_int(&cfg, "monitor", &val)) {
 			mon = val;
 		}
-		if (config_lookup_bool(&cfg, "center", &bval)) {
-			center = bval;
-		}
 		if (config_lookup_int(&cfg, "center_width", &val)) {
 			centerwidth = val;
-		}
-		if (config_lookup_bool(&cfg, "bottom", &bval)) {
-			bottom = bval;
 		}
 		if (config_lookup_bool(&cfg, "embedded", &bval)) {
 			embedded = bval;
@@ -821,6 +817,33 @@ main(int argc, char *argv[]) {
 		}
 		if (config_lookup_int(&cfg, "border_width", &val)) {
 			borderwidth = val;
+		}
+		if (config_lookup_int(&cfg, "prompt_fg_alpha", &val)) {
+			alphas[SchemePrompt][0] = val;
+		}
+		if (config_lookup_int(&cfg, "prompt_bg_alpha", &val)) {
+			alphas[SchemePrompt][1] = val;
+		}
+		if (config_lookup_int(&cfg, "normal_fg_alpha", &val)) {
+			alphas[SchemeNormal][0] = val;
+		}
+		if (config_lookup_int(&cfg, "normal_bg_alpha", &val)) {
+			alphas[SchemeNormal][1] = val;
+		}
+		if (config_lookup_int(&cfg, "select_fg_alpha", &val)) {
+			alphas[SchemeSelect][0] = val;
+		}
+		if (config_lookup_int(&cfg, "select_bg_alpha", &val)) {
+			alphas[SchemeSelect][1] = val;
+		}
+		if (config_lookup_int(&cfg, "desc_fg_alpha", &val)) {
+			alphas[SchemeDesc][0] = val;
+		}
+		if (config_lookup_int(&cfg, "desc_bg_alpha", &val)) {
+			alphas[SchemeDesc][1] = val;
+		}
+		if (config_lookup_string(&cfg, "position", &str)) {
+			position = str;
 		}
 		if (config_lookup_string(&cfg, "font", &str)) {
 			fonts[0] = str;
@@ -858,36 +881,21 @@ main(int argc, char *argv[]) {
 		if (config_lookup_string(&cfg, "desc_bg", &str)) {
 			colors[SchemeDesc][ColBg] = str;
 		}
-		if (config_lookup_int(&cfg, "prompt_fg_alpha", &val)) {
-			alphas[SchemePrompt][0] = val;
-		}
-		if (config_lookup_int(&cfg, "prompt_bg_alpha", &val)) {
-			alphas[SchemePrompt][1] = val;
-		}
-		if (config_lookup_int(&cfg, "normal_fg_alpha", &val)) {
-			alphas[SchemeNormal][0] = val;
-		}
-		if (config_lookup_int(&cfg, "normal_bg_alpha", &val)) {
-			alphas[SchemeNormal][1] = val;
-		}
-		if (config_lookup_int(&cfg, "select_fg_alpha", &val)) {
-			alphas[SchemeSelect][0] = val;
-		}
-		if (config_lookup_int(&cfg, "select_bg_alpha", &val)) {
-			alphas[SchemeSelect][1] = val;
-		}
-		if (config_lookup_int(&cfg, "desc_fg_alpha", &val)) {
-			alphas[SchemeDesc][0] = val;
-		}
-		if (config_lookup_int(&cfg, "desc_bg_alpha", &val)) {
-			alphas[SchemeDesc][1] = val;
-		}
 	} else if ((str = config_error_file(&cfg))) {
 		fprintf(stderr, "%s:%d: %s\n", config_error_file(&cfg),
-		        config_error_line(&cfg), config_error_text(&cfg));
+				config_error_line(&cfg), config_error_text(&cfg));
 		return(EXIT_FAILURE);
 	} else {
 		printf("No config file found. Use defaults.\n");
+	}
+
+	if (0 == strcmp(position, "center")) {
+		center = 1;
+		bottom = 0;
+	}
+	if (0 == strcmp(position, "bottom")) {
+		center = 0;
+		bottom = 1;
 	}
 
 	pinentry_init("pinentry-dmenu");

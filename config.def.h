@@ -2,9 +2,7 @@
 /* Default settings; can be overriden by pinentry-dmenu.conf */
 
 static unsigned int mon = -1;
-static unsigned int center = 0;
 static unsigned int centerwidth = 1024;
-static unsigned int bottom = 0;
 static unsigned int embedded = 0;
 static unsigned int lineheight = 22;
 static unsigned int borderwidth = 2;
@@ -18,6 +16,7 @@ static unsigned int alphas[SchemeLast][2] = {
 	[SchemeDesc]   = { 255, 230 },
 };
 
+static const char *position = "center";
 static const char *fonts[] = {
 	"DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true"
 };

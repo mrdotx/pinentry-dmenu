@@ -25,31 +25,25 @@ You can change the path to the config file with the environment variable
 
 .SH OPTIONS
 .TP
-.BI "monitor =" " -1"
+.BI "monitor = " "-1"
 pinentry-dmenu is displayed on the monitor number supplied. Monitor numbers are starting from 0.
 .TP
-.BI "center =" " false"
-pinentry-dmenu appears in the center of the screen.
-.TP
-.BI "center_width =" " 1024"
+.BI "center_width = " "1024"
 Defines the width for the 'center' menu.
 .TP
-.BI "bottom =" " false"
-pinentry-dmenu appears at the bottom of the screen.
-.TP
-.BI "embedded =" " false"
+.BI "embedded = " "false"
 Embed into window.
 .TP
-.BI "line_height =" " 22"
+.BI "line_height = " "22"
 Defines menu line of at least 'line_height' pixels tall.
 .TP
-.BI "border_width =" " 2"
+.BI "border_width = " "2"
 Defines the border width for the menu.
 .TP
-.BI "min_password_length =" " 32"
+.BI "min_password_length = " "32"
 The minimal space of the password field. This value has affect to the description field after the password field.
 .TP
-.BI "prompt_fg_alpha =" " 255"
+.BI "prompt_fg_alpha = " "255"
 Defines the prompt foreground alpha value.
 Values between
 .IR 0
@@ -57,61 +51,69 @@ Values between
 .IR 255
 (opaque) are supported.
 .TP
-.BI "prompt_bg_alpha =" " 255"
+.BI "prompt_bg_alpha = " "255"
 Defines the prompt background alpha value.
 .TP
-.BI "normal_fg_alpha =" " 255"
+.BI "normal_fg_alpha = " "255"
 Defines the normal foreground alpha value.
 .TP
-.BI "normal_bg_alpha =" " 230"
+.BI "normal_bg_alpha = " "230"
 Defines the normal background alpha value.
 .TP
-.BI "select_fg_alpha =" " 255"
+.BI "select_fg_alpha = " "255"
 Defines the selected foreground alpha value.
 .TP
-.BI "select_bg_alpha =" " 255"
+.BI "select_bg_alpha = " "255"
 Defines the selected background alpha value.
 .TP
-.BI "desc_fg_alpha =" " 255"
+.BI "desc_fg_alpha = " "255"
 Defines the description foreground alpha value.
 .TP
-.BI "desc_bg_alpha =" " 230"
+.BI "desc_bg_alpha = " "230"
 Defines the description background alpha value.
 .TP
-.BI "font =" " DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true"
+.BI "position = " """center"""
+Defines the osition of the menu.
+.IR bottom ,
+.I center
+and
+.I top
+are supported.
+.TP
+.BI "font = " """DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true"""
 Defines the font or font set used.
 .TP
-.BI "prompt =" " """"
+.BI "prompt = " """"""
 Defines the prompt to be displayed to the left of the input field.
 .TP
-.BI "asterisk =" " *"
+.BI "asterisk = " """*"""
 Defines the symbol which is showed for each typed character.
 .TP
-.BI "prompt_fg =" " #cccccc"
+.BI "prompt_fg = " """#cccccc"""
 Defines the prompt foreground color.
 .IR #RGB ,
 .I #RRGGBB
 and X color names are supported.
 .TP
-.BI "prompt_bg =" " #4185d7"
+.BI "prompt_bg = " """#4185d7"""
 Defines the prompt background color.
 .TP
-.BI "normal_fg =" " #cccccc"
+.BI "normal_fg = " """#cccccc"""
 Defines the normal foreground color.
 .TP
-.BI "normal_bg =" " #000000"
+.BI "normal_bg = " """#000000"""
 Defines the normal background color.
 .TP
-.BI "select_fg =" " #ffffff"
+.BI "select_fg = " """#ffffff"""
 Defines the selected foreground color.
 .TP
-.BI "select_bg =" " #4185d7"
+.BI "select_bg = " """#4185d7"""
 Defines the selected background color.
 .TP
-.BI "desc_fg =" " #cccccc"
+.BI "desc_fg = " """#cccccc"""
 Defines the description foreground color.
 .TP
-.BI "desc_bg =" " #000000"
+.BI "desc_bg = " """#000000"""
 Defines the description background color.
 
 .SH USAGE
@@ -227,9 +229,7 @@ Paste from primary X selection
 .\}
 .nf
 monitor = -1;
-center = false;
 center_width = 1024;
-bottom = false;
 embedded = false;
 line_height = 22;
 border_width = 2;
@@ -242,6 +242,7 @@ select_fg_alpha = 255;
 select_bg_alpha = 255;
 desc_fg_alpha = 255;
 desc_bg_alpha = 230;
+position = "center";
 font = "DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true";
 prompt = "";
 asterisk = "*";
