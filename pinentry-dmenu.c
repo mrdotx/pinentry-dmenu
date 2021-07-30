@@ -73,7 +73,41 @@ pinentry_t pinentry_info;
 
 #include "config.h"
 
-static void xinitvisual();
+static void
+xinitvisual(void) {
+	XVisualInfo *infos;
+	XRenderPictFormat *fmt;
+	int nitems;
+	int i;
+
+	XVisualInfo tpl = {
+		.screen = screen,
+		.depth = 32,
+		.class = TrueColor
+	};
+	long masks = VisualScreenMask | VisualDepthMask | VisualClassMask;
+
+	infos = XGetVisualInfo(dpy, masks, &tpl, &nitems);
+	visual = NULL;
+	for(i = 0; i < nitems; i ++) {
+		fmt = XRenderFindVisualFormat(dpy, infos[i].visual);
+		if (fmt->type == PictTypeDirect && fmt->direct.alphaMask) {
+			visual = infos[i].visual;
+			depth = infos[i].depth;
+			cmap = XCreateColormap(dpy, root, visual, AllocNone);
+			useargb = 1;
+			break;
+		}
+	}
+
+	XFree(infos);
+
+	if (! visual) {
+		visual = DefaultVisual(dpy, screen);
+		depth = DefaultDepth(dpy, screen);
+		cmap = DefaultColormap(dpy, screen);
+	}
+}
 
 static int
 drawitem(const char* text, Bool sel, int x, int y, int w) {
@@ -199,7 +233,7 @@ drawwin(void) {
 	char* pprompt = (repeat) ? pinentry_info->repeat_passphrase : pinentry_info->prompt;
 	int ppromptw = (pprompt) ? TEXTW(pprompt) : 0;
 
-	unsigned int censortl = minpwlen * TEXTW(asterisk) / strlen(asterisk);
+	unsigned int censortl = (center) ? 0 : minpwlen * TEXTW(asterisk) / strlen(asterisk);
 	unsigned int confirml = TEXTW(" YesNo ") + 3 * lrpad;
 
 	drw_setscheme(drw, scheme[SchemeNormal]);
@@ -214,10 +248,6 @@ drawwin(void) {
 		drw_setscheme(drw, scheme[SchemePrompt]);
 		drw_text(drw, x, 0, ppromptw, bh, lrpad / 2, pprompt, 0);
 		x += ppromptw;
-	}
-
-	if (center) {
-		censortl /= 4;
 	}
 
 	if (pinentry_info->description) {
@@ -241,8 +271,13 @@ drawwin(void) {
 				}
 
 				drw_setscheme(drw, scheme[SchemeDesc]);
-				drw_text(drw, pb, 0, pbw, bh, lrpad / 2, pinentry_info->description,
-				         0);
+				if (center) {
+					drw_text(drw, 0, lineheight, centerwidth, bh, lrpad / 2,
+						pinentry_info->description, 0);
+				} else {
+					drw_text(drw, pb, 0, pbw, bh, lrpad / 2,
+						pinentry_info->description, 0);
+				}
 			} else {
 				pbw = 0;
 			}
@@ -260,13 +295,13 @@ drawwin(void) {
 		}
 
 		censort[i+1] = '\n';
-		leftinput = mw - x - pbw;
+		leftinput = (center) ? mw - x : mw - x - pbw;
 		drw_text(drw, x, 0, leftinput, bh, lrpad / 2, censort, 0);
 		drw_font_getexts(drw->fonts, censort, cursor * asterlen, &curpos, NULL);
 
 		if ((curpos += lrpad / 2 - 1) < leftinput) {
 			drw_setscheme(drw, scheme[SchemeNormal]);
-		    drw_rect(drw, x + curpos, 2 + (bh - fh) / 2, 2, fh - 4, 1, 0);
+			drw_rect(drw, x + curpos, 2 + (bh - fh) / 2, 2, fh - 4, 1, 0);
 		}
 
 		free(censort);
@@ -303,8 +338,8 @@ setup(void) {
 
 	/* Calculate menu geometry */
 	bh = drw->fonts->h + 2;
-	bh = MAX(bh,lineheight);	/* make a menu line AT LEAST 'lineheight' tall */
-	mh = bh;
+	bh = MAX(bh,lineheight);    /* make a menu line AT LEAST 'lineheight' tall */
+	mh = (center) ? bh * 2 : bh;
 #ifdef XINERAMA
 	info = XineramaQueryScreens(dpy, &n);
 
@@ -346,8 +381,8 @@ setup(void) {
 			y = info[i].y_org + ((info[i].height - mh) / 2);
 		} else {
 			x = info[i].x_org;
-			y = info[i].y_org + (bottom ? info[i].height - mh : 0);
-			mw = info[i].width;
+			y = info[i].y_org + (bottom ? info[i].height - mh - (borderwidth * 2) : 0);
+			mw = info[i].width - (borderwidth * 2);
 		}
 
 		XFree(info);
@@ -364,8 +399,8 @@ setup(void) {
 			y = (wa.height - mh) / 2;
 		} else {
 			x = 0;
-			y = bottom ? wa.height - mh : 0;
-			mw = wa.width;
+			y = bottom ? wa.height - mh - (borderwidth * 2) : 0;
+			mw = wa.width - (borderwidth * 2);
 		}
 	}
 
@@ -865,41 +900,4 @@ main(int argc, char *argv[]) {
 	config_destroy(&cfg);
 
 	return 0;
-}
-
-void
-xinitvisual()
-{
-	XVisualInfo *infos;
-	XRenderPictFormat *fmt;
-	int nitems;
-	int i;
-
-	XVisualInfo tpl = {
-		.screen = screen,
-		.depth = 32,
-		.class = TrueColor
-	};
-	long masks = VisualScreenMask | VisualDepthMask | VisualClassMask;
-
-	infos = XGetVisualInfo(dpy, masks, &tpl, &nitems);
-	visual = NULL;
-	for(i = 0; i < nitems; i ++) {
-		fmt = XRenderFindVisualFormat(dpy, infos[i].visual);
-		if (fmt->type == PictTypeDirect && fmt->direct.alphaMask) {
-			visual = infos[i].visual;
-			depth = infos[i].depth;
-			cmap = XCreateColormap(dpy, root, visual, AllocNone);
-			useargb = 1;
-			break;
-		}
-	}
-
-	XFree(infos);
-
-	if (! visual) {
-		visual = DefaultVisual(dpy, screen);
-		depth = DefaultDepth(dpy, screen);
-		cmap = DefaultColormap(dpy, screen);
-	}
 }
