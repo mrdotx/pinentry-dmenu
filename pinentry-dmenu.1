@@ -28,7 +28,7 @@ You can change the path to the config file with the environment variable
 .BI "monitor =" " -1"
 pinentry-dmenu is displayed on the monitor number supplied. Monitor numbers are starting from 0.
 .TP
-.BI "center =" " false"
+.BI "center =" " true"
 pinentry-dmenu appears in the center of the screen.
 .TP
 .BI "center_width =" " 1024"
@@ -75,7 +75,7 @@ Defines the selected background alpha value.
 .BI "desc_fg_alpha =" " 255"
 Defines the description foreground alpha value.
 .TP
-.BI "desc_bg_alpha =" " 255"
+.BI "desc_bg_alpha =" " 230"
 Defines the description background alpha value.
 .TP
 .BI "font =" " DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true"
@@ -111,7 +111,7 @@ Defines the selected background color.
 .BI "desc_fg =" " #cccccc"
 Defines the description foreground color.
 .TP
-.BI "desc_bg =" " #4185d7"
+.BI "desc_bg =" " #000000"
 Defines the description background color.
 
 .SH USAGE
@@ -227,7 +227,7 @@ Paste from primary X selection
 .\}
 .nf
 monitor = -1;
-center = false;
+center = true;
 center_width = 1024;
 bottom = false;
 embedded = false;
@@ -241,7 +241,7 @@ normal_bg_alpha = 230;
 select_fg_alpha = 255;
 select_bg_alpha = 255;
 desc_fg_alpha = 255;
-desc_bg_alpha = 255;
+desc_bg_alpha = 230;
 font = "DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true";
 prompt = "";
 asterisk = "*";
@@ -252,7 +252,7 @@ normal_bg = "#000000";
 select_fg = "#ffffff";
 select_bg = "#4185d7";
 desc_fg = "#cccccc";
-desc_bg = "#4185d7";
+desc_bg = "#000000";
 
 .SH AUTHORS
 .B pinentry-dmenu

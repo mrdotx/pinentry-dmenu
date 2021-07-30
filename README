@@ -33,7 +33,7 @@ To use pinentry-dmenu add in `~/.gnupg/gpg-agent.conf`:
 The config is located in `~/.gnupg/pinentry-dmenu.conf`.
 
 monitor = -1;
-center = false;
+center = true;
 center_width = 1024;
 bottom = false;
 embedded = false;
@@ -47,7 +47,7 @@ normal_bg_alpha = 230;
 select_fg_alpha = 255;
 select_bg_alpha = 255;
 desc_fg_alpha = 255;
-desc_bg_alpha = 255;
+desc_bg_alpha = 230;
 font = "DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true";
 prompt = "";
 asterisk = "*";
@@ -58,4 +58,4 @@ normal_bg = "#000000";
 select_fg = "#ffffff";
 select_bg = "#4185d7";
 desc_fg = "#cccccc";
-desc_bg = "#4185d7";
+desc_bg = "#000000";
