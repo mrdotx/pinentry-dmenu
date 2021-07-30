@@ -272,7 +272,8 @@ drawwin(void) {
 
 				drw_setscheme(drw, scheme[SchemeDesc]);
 				if (center) {
-					drw_text(drw, 0, lineheight, centerwidth, bh, lrpad / 2,
+					drw_text(drw, ppromptw, lineheight, centerwidth,
+						bh + borderwidth, lrpad / 2,
 						pinentry_info->description, 0);
 				} else {
 					drw_text(drw, pb, 0, pbw, bh, lrpad / 2,
@@ -306,7 +307,6 @@ drawwin(void) {
 
 		free(censort);
 	} else {
-		x += TEXTW(" ");
 		x = drawitem("No", (sel == No), x, 0, TEXTW("No"));
 		x = drawitem("Yes", (sel == Yes), x, 0, TEXTW("Yes"));
 	}
