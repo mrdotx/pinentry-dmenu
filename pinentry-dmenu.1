@@ -3,13 +3,13 @@
 .SH NAME
 pinentry-dmenu - a pinentry program based on dmenu
 .SH DESCRIPTION
-.B pinentry-dmenu 
+.B pinentry-dmenu
 is a dmenu- and pinentry-based passphrase dialog called from the
 .BR gpg-agent (1)
 daemon. It is not intended to be invoked directly.
 
 .SH SYNOPSIS
-Set the 
+Set the
 .B pinentry-program
 in
 .IR ~/.gnupg/gpg-agent.conf
@@ -28,7 +28,7 @@ You can change the path to the config file with the environment variable
 .BI "monitor =" " -1"
 pinentry-dmenu is displayed on the monitor number supplied. Monitor numbers are starting from 0.
 .TP
-.BI "center =" " true"
+.BI "center =" " false"
 pinentry-dmenu appears in the center of the screen.
 .TP
 .BI "center_width =" " 1024"
@@ -227,7 +227,7 @@ Paste from primary X selection
 .\}
 .nf
 monitor = -1;
-center = true;
+center = false;
 center_width = 1024;
 bottom = false;
 embedded = false;

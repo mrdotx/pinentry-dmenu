@@ -2,7 +2,7 @@
 /* Default settings; can be overriden by pinentry-dmenu.conf */
 
 static unsigned int mon = -1;
-static unsigned int center = 1;
+static unsigned int center = 0;
 static unsigned int centerwidth = 1024;
 static unsigned int bottom = 0;
 static unsigned int embedded = 0;
