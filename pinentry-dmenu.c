@@ -48,7 +48,8 @@ static int lrpad;
 static size_t cursor;
 static int screen;
 
-static int bottom = 0, center = 0;
+static int bottom = 0,
+           center = 0;
 
 static char* pin;
 static int pin_len;
@@ -224,6 +225,29 @@ insert(const char *str, ssize_t n) {
 }
 
 static void
+clear_string(char *str)
+{
+    int i;
+    char *dest = str;
+
+    /* remove new lines */
+    for (i = 0; i < strlen(str); i++) {
+        if (str[i] == '\n') {
+            str[i] = ' ';
+        }
+    }
+
+    /* remove multiple spaces */
+    while (*str != '\0') {
+        while (*str == ' ' && *(str + 1) == ' ')
+            str++;
+
+       *dest++ = *str++;
+    }
+    *dest = '\0';
+}
+
+static void
 drawwin(void) {
     unsigned int curpos;
     int x = 0, pb, pbw = 0, fh = drw->fonts->h, i;
@@ -253,29 +277,22 @@ drawwin(void) {
     }
 
     if (pinentry_info->description) {
-        pb = mw - x;
+        clear_string(pinentry_info->description);
         pdesclen = strlen(pinentry_info->description);
+        pb = mw - x;
 
         if (pb > 0) {
             pb -= (winmode == WinPin) ? censortl : confirml;
-            pbw = MINDESCLEN * pdescw / pdesclen;
-            pbw = MIN(pbw, pdescw);
+            pbw = MIN(MINDESCLEN * pdescw / pdesclen, pdescw);
 
             if (pb >= pbw) {
-                pbw = MAX(pbw, pdescw);
-                pbw = MIN(pbw, pb);
+                pbw = MIN(MAX(pbw, pdescw), pb);
                 pb = mw - pbw;
-
-                for (i = 0; i < pdesclen; i++) {
-                    if (pinentry_info->description[i] == '\n') {
-                        pinentry_info->description[i] = ' ';
-                    }
-                }
 
                 drw_setscheme(drw, scheme[SchemeDesc]);
                 if (center) {
                     drw_text(drw, promptw + ppromptw, lineheight, centerwidth,
-                        bh + borderwidth, lrpad / 2,
+                        bh + borderwidth * 2, lrpad / 2,
                         pinentry_info->description, 0);
                 } else {
                     drw_text(drw, pb, 0, pbw, bh, lrpad / 2,
@@ -339,8 +356,7 @@ setup(void) {
     utf8 = XInternAtom(dpy, "UTF8_STRING", False);
 
     /* Calculate menu geometry */
-    bh = drw->fonts->h + 2;
-    bh = MAX(bh,lineheight);    /* make a menu line AT LEAST 'lineheight' tall */
+    bh = MAX(drw->fonts->h + 2, lineheight);    /* at least line height */
     mh = (center) ? bh * 2 : bh;
 #ifdef XINERAMA
     info = XineramaQueryScreens(dpy, &n);
@@ -383,8 +399,8 @@ setup(void) {
             y = info[i].y_org + ((info[i].height - mh) / 2);
         } else {
             x = info[i].x_org;
-            y = info[i].y_org + (bottom ? info[i].height - mh - (borderwidth * 2) : 0);
-            mw = info[i].width - (borderwidth * 2);
+            y = info[i].y_org + (bottom ? info[i].height - mh : 0);
+            mw = info[i].width;
         }
 
         XFree(info);
@@ -401,8 +417,8 @@ setup(void) {
             y = (wa.height - mh) / 2;
         } else {
             x = 0;
-            y = bottom ? wa.height - mh - (borderwidth * 2) : 0;
-            mw = wa.width - (borderwidth * 2);
+            y = bottom ? wa.height - mh : 0;
+            mw = wa.width;
         }
     }
 
