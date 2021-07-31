@@ -13,7 +13,7 @@ static unsigned int alphas[SchemeLast][2] = {
     [SchemePrompt] = { 255, 255 },
     [SchemeNormal] = { 255, 230 },
     [SchemeSelect] = { 255, 255 },
-    [SchemeDesc]   = { 255, 230 },
+    [SchemeDesc]   = { 255, 255 },
 };
 
 static const char *position = "center";
@@ -27,5 +27,5 @@ static const char *colors[SchemeLast][2] = {
     [SchemePrompt] = { "#cccccc", "#4185d7" },
     [SchemeNormal] = { "#cccccc", "#000000" },
     [SchemeSelect] = { "#ffffff", "#4185d7" },
-    [SchemeDesc]   = { "#cccccc", "#000000" },
+    [SchemeDesc]   = { "#cccccc", "#4185d7" },
 };
