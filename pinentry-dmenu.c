@@ -292,7 +292,7 @@ drawwin(void) {
                 drw_setscheme(drw, scheme[SchemeDesc]);
                 if (center) {
                     drw_text(drw, promptw + ppromptw, lineheight, centerwidth,
-                        bh + borderwidth * 2, lrpad / 2,
+                        bh + borderwidth, lrpad / 2,
                         pinentry_info->description, 0);
                 } else {
                     drw_text(drw, pb, 0, pbw, bh, lrpad / 2,
@@ -357,7 +357,7 @@ setup(void) {
 
     /* Calculate menu geometry */
     bh = MAX(drw->fonts->h + 2, lineheight);    /* at least line height */
-    mh = (center) ? bh * 2 : bh;
+    mh = bh;
 #ifdef XINERAMA
     info = XineramaQueryScreens(dpy, &n);
 
@@ -395,6 +395,7 @@ setup(void) {
 
         if (center) {
             mw = MIN(centerwidth, info[i].width);
+            mh *= 2;
             x = info[i].x_org + ((info[i].width  - mw) / 2);
             y = info[i].y_org + ((info[i].height - mh) / 2);
         } else {
@@ -413,6 +414,7 @@ setup(void) {
 
         if (center) {
             mw = MIN(centerwidth, wa.width);
+            mh *= 2;
             x = (wa.width  - mw) / 2;
             y = (wa.height - mh) / 2;
         } else {
