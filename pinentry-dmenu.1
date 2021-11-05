@@ -1,279 +1,335 @@
-.TH PINENTRY-DMENU 1 "DATE" pinentry-dmenu\-VERSION "pinentry-dmenu Manual"
-
+.TH "PINENTRY-DMENU" "1" "" "Version-VERSION" "pinentry-dmenu Manual"
+.hy
 .SH NAME
+.PP
 pinentry-dmenu - a pinentry program based on dmenu
-.SH DESCRIPTION
-.B pinentry-dmenu
-is a dmenu- and pinentry-based passphrase dialog called from the
-.BR gpg-agent (1)
-daemon. It is not intended to be invoked directly.
-
 .SH SYNOPSIS
-Set the
-.B pinentry-program
-in
-.IR ~/.gnupg/gpg-agent.conf
-to
-.B pinentry-dmenu
-to use the program as the regular dialog for
-.BR gpg-agent .
+.PP
+Set the \f[B]pinentry-program\f[R] in
+\f[I]\[ti]/.gnupg/gpg-agent.conf\f[R] to \f[B]pinentry-dmenu\f[R] to use
+the program as the regular dialog for \f[B]gpg-agent\f[R].
 .PP
 The configuration is placed in
-.IR ~/.gnupg/pinentry-dmenu.conf .
+\f[I]\[ti]/.gnupg/pinentry-dmenu.conf\f[R].
 You can change the path to the config file with the environment variable
-.IR GNUPGHOME .
-
+\f[I]GNUPGHOME\f[R].
+.SH DESCRIPTION
+.PP
+\f[B]pinentry-dmenu\f[R] is a dmenu- and pinentry-based passphrase
+dialog called from the \f[B]gpg-agent\f[R](1) daemon.
+It is not intended to be invoked directly.
 .SH OPTIONS
 .TP
-.BI "monitor = " "-1"
-pinentry-dmenu is displayed on the monitor number supplied. Monitor numbers are starting from 0.
+\f[B]monitor\f[R] = \f[I]-1\f[R]
+pinentry-dmenu is displayed on the monitor number supplied.
+Monitor numbers are starting from 0.
 .TP
-.BI "center_width = " "1024"
-Defines the width for the 'center' menu.
+\f[B]center_width\f[R] = \f[I]1024\f[R]
+Defines the width for the `center' menu.
 .TP
-.BI "embedded = " "false"
+\f[B]embedded\f[R] = \f[I]false\f[R]
 Embed into window.
 .TP
-.BI "line_height = " "22"
-Defines menu line of at least 'line_height' pixels tall.
+\f[B]line_height\f[R] = \f[I]22\f[R]
+Defines menu line of at least `line_height' pixels tall.
 .TP
-.BI "border_width = " "2"
+\f[B]border_width\f[R] = \f[I]2\f[R]
 Defines the border width for the menu.
 .TP
-.BI "min_password_length = " "32"
-The minimal space of the password field. This value has affect to the description field after the password field.
+\f[B]min_password_length\f[R] = \f[I]32\f[R]
+The minimal space of the password field.
+This value has affect to the description field after the password field.
 .TP
-.BI "prompt_fg_alpha = " "255"
+\f[B]prompt_fg_alpha\f[R] = \f[I]255\f[R]
 Defines the prompt foreground alpha value.
-Values between
-.IR 0
-(transparent) and
-.IR 255
-(opaque) are supported.
+Values between \f[I]0\f[R] (transparent) and \f[I]255\f[R] (opaque) are
+supported.
 .TP
-.BI "prompt_bg_alpha = " "255"
+\f[B]prompt_bg_alpha\f[R] = \f[I]255\f[R]
 Defines the prompt background alpha value.
 .TP
-.BI "normal_fg_alpha = " "255"
+\f[B]normal_fg_alpha\f[R] = \f[I]255\f[R]
 Defines the normal foreground alpha value.
 .TP
-.BI "normal_bg_alpha = " "230"
+\f[B]normal_bg_alpha\f[R] = \f[I]230\f[R]
 Defines the normal background alpha value.
 .TP
-.BI "select_fg_alpha = " "255"
+\f[B]select_fg_alpha\f[R] = \f[I]255\f[R]
 Defines the selected foreground alpha value.
 .TP
-.BI "select_bg_alpha = " "255"
+\f[B]select_bg_alpha\f[R] = \f[I]255\f[R]
 Defines the selected background alpha value.
 .TP
-.BI "desc_fg_alpha = " "255"
+\f[B]desc_fg_alpha\f[R] = \f[I]255\f[R]
 Defines the description foreground alpha value.
 .TP
-.BI "desc_bg_alpha = " "255"
+\f[B]desc_bg_alpha\f[R] = \f[I]255\f[R]
 Defines the description background alpha value.
 .TP
-.BI "position = " """center"""
+\f[B]position\f[R] = \f[I]\[lq]center\[rq]\f[R]
 Defines the osition of the menu.
-.IR bottom ,
-.I center
-and
-.I top
-are supported.
+\f[I]bottom\f[R], \f[I]center\f[R] and \f[I]top\f[R] are supported.
 .TP
-.BI "font = " """DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true"""
+\f[B]font\f[R] = \f[I]\[lq]DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true\[rq]\f[R]
 Defines the font or font set used.
 .TP
-.BI "prompt = " """"""
+\f[B]prompt\f[R] = \f[I]\[lq]\[lq]\f[R]
 Defines the prompt to be displayed to the left of the input field.
 .TP
-.BI "asterisk = " """*"""
+\f[B]asterisk\f[R] = \f[I]\[lq]*\[rq]\f[R]
 Defines the symbol which is showed for each typed character.
 .TP
-.BI "prompt_fg = " """#cccccc"""
+\f[B]prompt_fg\f[R] = \f[I]\[lq]#cccccc\[rq]\f[R]
 Defines the prompt foreground color.
-.IR #RGB ,
-.I #RRGGBB
-and X color names are supported.
+\f[I]#RGB\f[R], \f[I]#RRGGBB\f[R] and X color names are supported.
 .TP
-.BI "prompt_bg = " """#4185d7"""
+\f[B]prompt_bg\f[R] = \f[I]\[lq]#4185d7\[rq]\f[R]
 Defines the prompt background color.
 .TP
-.BI "normal_fg = " """#cccccc"""
+\f[B]normal_fg\f[R] = \f[I]\[lq]#cccccc\[rq]\f[R]
 Defines the normal foreground color.
 .TP
-.BI "normal_bg = " """#000000"""
+\f[B]normal_bg\f[R] = \f[I]\[lq]#000000\[rq]\f[R]
 Defines the normal background color.
 .TP
-.BI "select_fg = " """#ffffff"""
+\f[B]select_fg\f[R] = \f[I]\[lq]#ffffff\[rq]\f[R]
 Defines the selected foreground color.
 .TP
-.BI "select_bg = " """#4185d7"""
+\f[B]select_bg\f[R] = \f[I]\[lq]#4185d7\[rq]\f[R]
 Defines the selected background color.
 .TP
-.BI "desc_fg = " """#cccccc"""
+\f[B]desc_fg\f[R] = \f[I]\[lq]#cccccc\[rq]\f[R]
 Defines the description foreground color.
 .TP
-.BI "desc_bg = " """#4185d7"""
+\f[B]desc_bg\f[R] = \f[I]\[lq]#4185d7\[rq]\f[R]
 Defines the description background color.
-
 .SH USAGE
-pinentry-dmenu is completely controlled by the keyboard.
+.PP
+\f[B]pinentry-dmenu\f[R] is completely controlled by the keyboard.
 .TP
-.B Return
+\f[B]Return\f[R]
 Confirm input
 .TP
-.B Ctrl-Return
+\f[B]Ctrl-Return\f[R]
 Confirm input
 .TP
-.B Shift\-Return
+\f[B]Shift-Return\f[R]
 Confirm input
 .TP
-.B Escape
+\f[B]Escape\f[R]
 Cancel input
 .TP
-.B C\-c
+\f[B]C-c\f[R]
 Escape
-
-.SS Confirm Mode
+.PP
+\f[B]\f[BI]Confirm Mode\f[B]\f[R]
 .TP
-.B Down
+\f[B]Down\f[R]
 Right
 .TP
-.B End
+\f[B]End\f[R]
 Right
 .TP
-.B Home
+\f[B]Home\f[R]
 Left
 .TP
-.B Next
+\f[B]Next\f[R]
 Right
 .TP
-.B Prior
+\f[B]Prior\f[R]
 Left
 .TP
-.B Up
+\f[B]Up\f[R]
 Left
 .TP
-.B g
+\f[B]g\f[R]
 Cancel input
 .TP
-.B G
+\f[B]G\f[R]
 Cancel input
 .TP
-.B h
+\f[B]h\f[R]
 Left
 .TP
-.B j
+\f[B]j\f[R]
 Left
 .TP
-.B k
+\f[B]k\f[R]
 Right
 .TP
-.B l
+\f[B]l\f[R]
 Right
 .TP
-.B n
+\f[B]n\f[R]
 Confirm with no
 .TP
-.B N
+\f[B]N\f[R]
 Confirm with no
 .TP
-.B y
+\f[B]y\f[R]
 Confirm with yes
 .TP
-.B Y
+\f[B]Y\f[R]
 Confirm with yes
-
-.SS Pin Mode
+.PP
+\f[B]\f[BI]Pin Mode\f[B]\f[R]
 .TP
-.B End
+\f[B]End\f[R]
 Move cursor to the line end
 .TP
-.B Home
+\f[B]Home\f[R]
 Move cursor to the line begin
 .TP
-.B C\-a
+\f[B]C-a\f[R]
 Home
 .TP
-.B C\-b
+\f[B]C-b\f[R]
 Left
 .TP
-.B C\-d
+\f[B]C-d\f[R]
 Delete
 .TP
-.B C\-e
+\f[B]C-e\f[R]
 End
 .TP
-.B C\-f
+\f[B]C-f\f[R]
 Right
 .TP
-.B C\-g
+\f[B]C-g\f[R]
 Escape
 .TP
-.B C\-h
+\f[B]C-h\f[R]
 Backspace
 .TP
-.B C\-k
+\f[B]C-k\f[R]
 Delete line right
 .TP
-.B C\-u
+\f[B]C-u\f[R]
 Delete line left
 .TP
-.B C\-v
+\f[B]C-v\f[R]
 Paste from primary X selection
-
 .SH EXAMPLES
-.sp
-.if n \{
-.RS 4
-.\}
-.nf
+.PP
 monitor = -1;
-center_width = 1024;
-embedded = false;
-line_height = 22;
-border_width = 2;
-min_password_length = 32;
-prompt_fg_alpha = 255;
-prompt_bg_alpha = 255;
-normal_fg_alpha = 255;
-normal_bg_alpha = 230;
-select_fg_alpha = 255;
-select_bg_alpha = 255;
-desc_fg_alpha = 255;
-desc_bg_alpha = 255;
-position = "center";
-font = "DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true";
-prompt = "";
-asterisk = "*";
-prompt_fg = "#cccccc";
-prompt_bg = "#4185d7";
-normal_fg = "#cccccc";
-normal_bg = "#000000";
-select_fg = "#ffffff";
-select_bg = "#4185d7";
-desc_fg = "#cccccc";
-desc_bg = "#4185d7";
-
-.SH AUTHORS
-.B pinentry-dmenu
-is a fork of
-.B dmenu
-<https://tools.suckless.org/dmenu>
-and uses the api of
-.B pinentry
-, a GnuPG tool.
 .PD 0
 .P
 .PD
-.B pinentry-dmenu
-was written by mrdotx
-.RI < klassiker@gmx.de >
-
-.SH REPORTING BUGS
-Report pinentry-dmenu bugs to <BUGREPORT>
-
+center_width = 1024;
+.PD 0
+.P
+.PD
+embedded = false;
+.PD 0
+.P
+.PD
+line_height = 22;
+.PD 0
+.P
+.PD
+border_width = 2;
+.PD 0
+.P
+.PD
+min_password_length = 32;
+.PD 0
+.P
+.PD
+prompt_fg_alpha = 255;
+.PD 0
+.P
+.PD
+prompt_bg_alpha = 255;
+.PD 0
+.P
+.PD
+normal_fg_alpha = 255;
+.PD 0
+.P
+.PD
+normal_bg_alpha = 230;
+.PD 0
+.P
+.PD
+select_fg_alpha = 255;
+.PD 0
+.P
+.PD
+select_bg_alpha = 255;
+.PD 0
+.P
+.PD
+desc_fg_alpha = 255;
+.PD 0
+.P
+.PD
+desc_bg_alpha = 255;
+.PD 0
+.P
+.PD
+position = \[lq]center\[rq];
+.PD 0
+.P
+.PD
+font = \[lq]DejaVuSansMono Nerd
+Font:pixelsize=16:antialias=true:autohint=true\[rq];
+.PD 0
+.P
+.PD
+prompt = \[lq]\[lq];
+.PD 0
+.P
+.PD
+asterisk = \[lq]*\[rq];
+.PD 0
+.P
+.PD
+prompt_fg = \[lq]#cccccc\[rq];
+.PD 0
+.P
+.PD
+prompt_bg = \[lq]#4185d7\[rq];
+.PD 0
+.P
+.PD
+normal_fg = \[lq]#cccccc\[rq];
+.PD 0
+.P
+.PD
+normal_bg = \[lq]#000000\[rq];
+.PD 0
+.P
+.PD
+select_fg = \[lq]#ffffff\[rq];
+.PD 0
+.P
+.PD
+select_bg = \[lq]#4185d7\[rq];
+.PD 0
+.P
+.PD
+desc_fg = \[lq]#cccccc\[rq];
+.PD 0
+.P
+.PD
+desc_bg = \[lq]#4185d7\[rq];
+.SH BUGS
+.PP
+See GitHub Issues:
+\f[I]https://github.com/mrdotx/pinentry-dmenu/issues\f[R]
+.SH AUTHORS
+.PP
+\f[B]pinentry-dmenu\f[R] is a fork of \f[B]dmenu\f[R]
+<\f[I]https://tools.suckless.org/dmenu\f[R]> and uses the api of
+\f[B]pinentry\f[R], a GnuPG tool.
+.PD 0
+.P
+.PD
+\f[B]pinentry-dmenu\f[R] was written by mrdotx
+<\f[I]klassiker\[at]gmx.de\f[R]>
 .SH SEE ALSO
-.BR dmenu (1),
-.BR dwm (1),
-.BR gpg-agent (1)
+.PP
+\f[B]dmenu\f[R](1), \f[B]dwm\f[R](1), \f[B]gpg-agent\f[R](1)
+.SH LICENSE
+.PP
+See the LICENSE.md file for the terms of redistribution.
