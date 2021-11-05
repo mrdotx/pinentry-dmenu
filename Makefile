@@ -37,6 +37,11 @@ clean:
 	@rm -f pinentry-dmenu ${OBJ}
 	$(MAKE) -C pinentry/ clean
 
+man: pinentry-dmenu.1
+	rm -f pinentry-dmenu.1
+	pandoc -s --to man pinentry-dmenu.1.md -o pinentry-dmenu.1
+	sed -i '1,2d' pinentry-dmenu.1
+
 dist: clean
 	@echo creating dist tarball
 	@mkdir -p dmenu-${VERSION}
@@ -63,4 +68,4 @@ uninstall:
 	@echo removing manual page from ${DESTDIR}${MANPREFIX}/man1
 	@rm -f ${DESTDIR}${MANPREFIX}/man1/pinentry-dmenu.1
 
-.PHONY: all options clean dist install pinentry uninstall
+.PHONY: all options clean man dist install pinentry uninstall
