@@ -59,7 +59,7 @@ The configuration is placed in *~/.gnupg/pinentry-dmenu.conf*. You can change th
 : Defines the description background alpha value.
 
 **position** = *"center"*
-: Defines the osition of the menu. *bottom*, *center* and *top* are supported.
+: Defines the position of the menu. *bottom*, *center* and *top* are supported.
 
 **font** = *"DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true"*
 : Defines the font or font set used.
@@ -245,4 +245,4 @@ See GitHub Issues: *https://github.com/mrdotx/pinentry-dmenu/issues*
 
 # LICENSE
 
-See the LICENSE.md file for the terms of redistribution.
+See the *LICENSE.md* file for the terms of redistribution.
