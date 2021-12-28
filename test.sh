@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# path:   /home/klassiker/.local/share/repos/pinentry-dmenu/test.sh
+# author: klassiker [mrdotx]
+# github: https://github.com/mrdotx/pinentry-dmenu
+# date:   2021-12-28T19:18:10+0100
+
 prompt="SETTITLE title
 SETPROMPT prompt
 SETDESC PROMPT
