@@ -903,8 +903,6 @@ main(int argc, char *argv[]) {
         fprintf(stderr, "%s:%d: %s\n", config_error_file(&cfg),
                 config_error_line(&cfg), config_error_text(&cfg));
         return(EXIT_FAILURE);
-    } else {
-        printf("No config file found. Use defaults.\n");
     }
 
     if (0 == strcmp(position, "center")) {
