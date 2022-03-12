@@ -1,3 +1,17 @@
+.\" Define V font for inline verbatim, using C font in formats
+.\" that render this, and otherwise B font.
+.ie "\f[CB]x\f[]"x" \{\
+. ftr V B
+. ftr VI BI
+. ftr VB B
+. ftr VBI BI
+.\}
+.el \{\
+. ftr V CR
+. ftr VI CI
+. ftr VB CB
+. ftr VBI CBI
+.\}
 .TH "PINENTRY-DMENU" "1" "" "Version-VERSION" "pinentry-dmenu Manual"
 .hy
 .SH NAME
@@ -70,7 +84,7 @@ Defines the description background alpha value.
 Defines the position of the menu.
 \f[I]bottom\f[R], \f[I]center\f[R] and \f[I]top\f[R] are supported.
 .TP
-\f[B]font\f[R] = \f[I]\[lq]DejaVuSansMono Nerd Font:pixelsize=16:antialias=true:autohint=true\[rq]\f[R]
+\f[B]font\f[R] = \f[I]\[lq]DejaVuSansMono Nerd Font:pixelsize=16\[rq]\f[R]
 Defines the font or font set used.
 .TP
 \f[B]prompt\f[R] = \f[I]\[lq]\[lq]\f[R]
@@ -271,8 +285,7 @@ position = \[lq]center\[rq];
 .PD 0
 .P
 .PD
-font = \[lq]DejaVuSansMono Nerd
-Font:pixelsize=16:antialias=true:autohint=true\[rq];
+font = \[lq]DejaVuSansMono Nerd Font:pixelsize=16\[rq];
 .PD 0
 .P
 .PD
