@@ -25,10 +25,10 @@ The configuration is placed in *~/.gnupg/pinentry-dmenu.conf*. You can change th
 **embedded** = *false*
 : Embed into window.
 
-**line_height** = *22*
+**line_height** = *25*
 : Defines menu line of at least 'line_height' pixels tall.
 
-**border_width** = *2*
+**border_width** = *1*
 : Defines the border width for the menu.
 
 **min_password_length** = *32*
@@ -206,8 +206,8 @@ The configuration is placed in *~/.gnupg/pinentry-dmenu.conf*. You can change th
 | monitor = -1;
 | center_width = 1024;
 | embedded = false;
-| line_height = 22;
-| border_width = 2;
+| line_height = 25;
+| border_width = 1;
 | min_password_length = 32;
 | prompt_fg_alpha = 255;
 | prompt_bg_alpha = 255;
