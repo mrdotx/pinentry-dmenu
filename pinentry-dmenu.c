@@ -432,8 +432,9 @@ setup(void) {
     swa.border_pixel = 0;
     swa.colormap = cmap;
     swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask;
-    win = XCreateWindow(dpy, parentwin, x, y, mw, mh, borderwidth,
-                        depth, CopyFromParent, visual,
+    win = XCreateWindow(dpy, parentwin, x, y,
+	                    mw - (borderwidth * 2), mh - (borderwidth * 2),
+                        borderwidth, depth, CopyFromParent, visual,
                         CWOverrideRedirect | CWBackPixel | CWBorderPixel | CWColormap | CWEventMask, &swa);
     if (borderwidth)
         XSetWindowBorder(dpy, win, scheme[SchemeSelect][ColBg].pixel);
