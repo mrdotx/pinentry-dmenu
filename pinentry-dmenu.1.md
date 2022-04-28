@@ -17,10 +17,10 @@ The configuration is placed in *~/.gnupg/pinentry-dmenu.conf*. You can change th
 # OPTIONS
 
 **monitor** = *-1*
-: pinentry-dmenu is displayed on the monitor number supplied. Monitor numbers are starting from 0.
+: pinentry-dmenu is displayed on the monitor number supplied. Monitor numbers are starting from 0. Value -1 for focused monitor.
 
 **center_width** = *1024*
-: Defines the width for the 'center' menu.
+: Defines the width for the 'center' menu. Value -1 for full width.
 
 **embedded** = *false*
 : Embed into window.
