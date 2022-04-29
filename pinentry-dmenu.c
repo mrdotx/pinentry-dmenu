@@ -292,7 +292,7 @@ drawwin(void) {
                 drw_setscheme(drw, scheme[SchemeDesc]);
                 if (center) {
                     drw_text(drw, promptw + ppromptw, lineheight, centerwidth,
-                        bh + borderwidth, lrpad / 2,
+                        bh, lrpad / 2,
                         pinentry_info->description, 0);
                 } else {
                     drw_text(drw, pb, 0, pbw, bh, lrpad / 2,
@@ -357,7 +357,7 @@ setup(void) {
 
     /* Calculate menu geometry */
     bh = MAX(drw->fonts->h + 2, lineheight);    /* at least line height */
-    mh = bh;
+    mh = bh + (borderwidth * 2);
 #ifdef XINERAMA
     info = XineramaQueryScreens(dpy, &n);
 
@@ -394,14 +394,14 @@ setup(void) {
         }
 
         if (center) {
-            mw = MIN(centerwidth, info[i].width);
-            mh *= 2;
+            mw = MIN(centerwidth, info[i].width) - (borderwidth * 2);
+            mh = (mh * 2) - (borderwidth * 2);
             x = info[i].x_org + ((info[i].width  - mw) / 2);
             y = info[i].y_org + ((info[i].height - mh) / 2);
         } else {
             x = info[i].x_org;
             y = info[i].y_org + (bottom ? info[i].height - mh : 0);
-            mw = info[i].width;
+            mw = info[i].width - (borderwidth * 2);
         }
 
         XFree(info);
@@ -413,14 +413,14 @@ setup(void) {
         }
 
         if (center) {
-            mw = MIN(centerwidth, wa.width);
-            mh *= 2;
+            mw = MIN(centerwidth, wa.width) - (borderwidth * 2);
+            mh = mh * 2 - (borderwidth * 2);
             x = (wa.width  - mw) / 2;
             y = (wa.height - mh) / 2;
         } else {
             x = 0;
             y = bottom ? wa.height - mh : 0;
-            mw = wa.width;
+            mw = wa.width - (borderwidth * 2);
         }
     }
 
@@ -432,8 +432,7 @@ setup(void) {
     swa.border_pixel = 0;
     swa.colormap = cmap;
     swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask;
-    win = XCreateWindow(dpy, parentwin, x, y,
-	                    mw - (borderwidth * 2), mh - (borderwidth * 2),
+    win = XCreateWindow(dpy, parentwin, x, y, mw, mh - (borderwidth * 2),
                         borderwidth, depth, CopyFromParent, visual,
                         CWOverrideRedirect | CWBackPixel | CWBorderPixel | CWColormap | CWEventMask, &swa);
     if (borderwidth)
