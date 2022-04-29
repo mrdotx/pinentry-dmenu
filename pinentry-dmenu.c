@@ -414,7 +414,7 @@ setup(void) {
 
         if (center) {
             mw = MIN(centerwidth, wa.width) - (borderwidth * 2);
-            mh = mh * 2 - (borderwidth * 2);
+            mh = (mh * 2) - (borderwidth * 2);
             x = (wa.width  - mw) / 2;
             y = (wa.height - mh) / 2;
         } else {
