@@ -396,8 +396,8 @@ setup(void) {
         if (center) {
             mw = MIN(centerwidth, info[i].width) - (borderwidth * 2);
             mh = (mh * 2) - (borderwidth * 2);
-            x = info[i].x_org + ((info[i].width  - mw) / 2);
-            y = info[i].y_org + ((info[i].height - mh) / 2);
+            x = info[i].x_org + ((info[i].width  - mw) / 2) - borderwidth;
+            y = info[i].y_org + ((info[i].height - mh) / 2) - borderwidth;
         } else {
             x = info[i].x_org;
             y = info[i].y_org + (bottom ? info[i].height - mh : 0);
@@ -415,8 +415,8 @@ setup(void) {
         if (center) {
             mw = MIN(centerwidth, wa.width) - (borderwidth * 2);
             mh = (mh * 2) - (borderwidth * 2);
-            x = (wa.width  - mw) / 2;
-            y = (wa.height - mh) / 2;
+            x = ((wa.width  - mw) / 2) - borderwidth;
+            y = ((wa.height - mh) / 2) - borderwidth;
         } else {
             x = 0;
             y = bottom ? wa.height - mh : 0;
