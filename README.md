@@ -27,5 +27,5 @@ See the man page for details.
 
 ## Manual
 
-You can view the manual by running `man pinentry-dmenu`, or `man pinentry-dmenu.1`.
-If you've already ran `make clean install`.
+You can view the manual by running `man pinentry-dmenu`
+or `man pinentry-dmenu.1`, if you've already ran `make clean install`.
