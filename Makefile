@@ -40,7 +40,7 @@ clean:
 man: pinentry-dmenu.1
 	rm -f pinentry-dmenu.1
 	pandoc -s --to man pinentry-dmenu.1.md -o pinentry-dmenu.1
-	sed -i '1,2d' pinentry-dmenu.1
+	sed -i '/^.\\\"/d' pinentry-dmenu.1
 
 dist: clean
 	@echo creating dist tarball
