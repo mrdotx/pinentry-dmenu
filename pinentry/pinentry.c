@@ -1,5 +1,5 @@
 /* pinentry.c - The PIN entry support library
- * Copyright (C) 2002, 2003, 2007, 2008, 2010, 2015, 2016 g10 Code GmbH
+ * Copyright (C) 2002, 2003, 2007, 2008, 2010, 2015, 2016, 2021 g10 Code GmbH
  *
  * This file is part of PINENTRY.
  *
@@ -37,18 +37,9 @@
 #ifndef HAVE_W32CE_SYSTEM
 # include <locale.h>
 #endif
-#ifdef HAVE_LANGINFO_H
-#include <langinfo.h>
-#endif
 #include <limits.h>
 #ifdef HAVE_W32CE_SYSTEM
 # include <windows.h>
-#endif
-
-#undef WITH_UTF8_CONVERSION
-#if defined FALLBACK_CURSES || defined PINENTRY_CURSES || defined PINENTRY_GTK
-# include <iconv.h>
-# define WITH_UTF8_CONVERSION 1
 #endif
 
 #include <assuan.h>
@@ -81,16 +72,10 @@ static const char *flavor_flag;
 /* Because gtk_init removes the --display arg from the command lines
  * and our command line parser is called after gtk_init (so that it
  * does not see gtk specific options) we don't have a way to get hold
- * of the --display option.  Our solution is to remember --disable in
+ * of the --display option.  Our solution is to remember --display in
  * the call to pinentry_have_display and set it then in our
  * parser.  */
 static char *remember_display;
-
-/* Flag to remember whether a warning has been printed.  */
-#ifdef WITH_UTF8_CONVERSION
-static int lc_ctype_unknown_warning;
-#endif
-
 
 static void
 pinentry_reset (int use_defaults)
@@ -111,10 +96,15 @@ pinentry_reset (int use_defaults)
   char *default_cf_visi = pinentry.default_cf_visi;
   char *default_tt_visi = pinentry.default_tt_visi;
   char *default_tt_hide = pinentry.default_tt_hide;
+  char *default_capshint = pinentry.default_capshint;
   char *touch_file = pinentry.touch_file;
   unsigned long owner_pid = pinentry.owner_pid;
   int owner_uid = pinentry.owner_uid;
   char *owner_host = pinentry.owner_host;
+  int constraints_enforce = pinentry.constraints_enforce;
+  char *constraints_hint_short = pinentry.constraints_hint_short;
+  char *constraints_hint_long = pinentry.constraints_hint_long;
+  char *constraints_error_title = pinentry.constraints_error_title;
 
   /* These options are set from the command line.  Don't reset
      them.  */
@@ -148,9 +138,13 @@ pinentry_reset (int use_defaults)
       free (pinentry.default_cf_visi);
       free (pinentry.default_tt_visi);
       free (pinentry.default_tt_hide);
+      free (pinentry.default_capshint);
       free (pinentry.touch_file);
       free (pinentry.owner_host);
       free (pinentry.display);
+      free (pinentry.constraints_hint_short);
+      free (pinentry.constraints_hint_long);
+      free (pinentry.constraints_error_title);
     }
 
   free (pinentry.title);
@@ -165,6 +159,7 @@ pinentry_reset (int use_defaults)
   free (pinentry.repeat_error_string);
   free (pinentry.quality_bar);
   free (pinentry.quality_bar_tt);
+  free (pinentry.formatted_passphrase_hint);
   free (pinentry.keyinfo);
   free (pinentry.specific_err_info);
 
@@ -208,10 +203,15 @@ pinentry_reset (int use_defaults)
       pinentry.default_cf_visi = default_cf_visi;
       pinentry.default_tt_visi = default_tt_visi;
       pinentry.default_tt_hide = default_tt_hide;
+      pinentry.default_capshint = default_capshint;
       pinentry.touch_file = touch_file;
       pinentry.owner_pid = owner_pid;
       pinentry.owner_uid = owner_uid;
       pinentry.owner_host = owner_host;
+      pinentry.constraints_enforce = constraints_enforce;
+      pinentry.constraints_hint_short = constraints_hint_short;
+      pinentry.constraints_hint_long = constraints_hint_long;
+      pinentry.constraints_error_title = constraints_error_title;
 
       pinentry.debug = debug;
       pinentry.display = display;
@@ -240,150 +240,6 @@ pinentry_assuan_reset_handler (assuan_context_t ctx, char *line)
 
 
 
-#ifdef WITH_UTF8_CONVERSION
-char *
-pinentry_utf8_to_local (const char *lc_ctype, const char *text)
-{
-  iconv_t cd;
-  const char *input = text;
-  size_t input_len = strlen (text) + 1;
-  char *output;
-  size_t output_len;
-  char *output_buf;
-  size_t processed;
-  char *old_ctype;
-  char *target_encoding;
-
-  /* If no locale setting could be determined, simply copy the
-     string.  */
-  if (!lc_ctype)
-    {
-      if (! lc_ctype_unknown_warning)
-	{
-	  fprintf (stderr, "%s: no LC_CTYPE known - assuming UTF-8\n",
-		   this_pgmname);
-	  lc_ctype_unknown_warning = 1;
-	}
-      return strdup (text);
-    }
-
-  old_ctype = strdup (setlocale (LC_CTYPE, NULL));
-  if (!old_ctype)
-    return NULL;
-  setlocale (LC_CTYPE, lc_ctype);
-  target_encoding = nl_langinfo (CODESET);
-  if (!target_encoding)
-    target_encoding = "?";
-  setlocale (LC_CTYPE, old_ctype);
-  free (old_ctype);
-
-  /* This is overkill, but simplifies the iconv invocation greatly.  */
-  output_len = input_len * MB_LEN_MAX;
-  output_buf = output = malloc (output_len);
-  if (!output)
-    return NULL;
-
-  cd = iconv_open (target_encoding, "UTF-8");
-  if (cd == (iconv_t) -1)
-    {
-      fprintf (stderr, "%s: can't convert from UTF-8 to %s: %s\n",
-               this_pgmname, target_encoding, strerror (errno));
-      free (output_buf);
-      return NULL;
-    }
-  processed = iconv (cd, (ICONV_CONST char **)&input, &input_len,
-                     &output, &output_len);
-  iconv_close (cd);
-  if (processed == (size_t) -1 || input_len)
-    {
-      fprintf (stderr, "%s: error converting from UTF-8 to %s: %s\n",
-               this_pgmname, target_encoding, strerror (errno));
-      free (output_buf);
-      return NULL;
-    }
-  return output_buf;
-}
-#endif /*WITH_UTF8_CONVERSION*/
-
-
-/* Convert TEXT which is encoded according to LC_CTYPE to UTF-8.  With
-   SECURE set to true, use secure memory for the returned buffer.
-   Return NULL on error. */
-#ifdef WITH_UTF8_CONVERSION
-char *
-pinentry_local_to_utf8 (char *lc_ctype, char *text, int secure)
-{
-  char *old_ctype;
-  char *source_encoding;
-  iconv_t cd;
-  const char *input = text;
-  size_t input_len = strlen (text) + 1;
-  char *output;
-  size_t output_len;
-  char *output_buf;
-  size_t processed;
-
-  /* If no locale setting could be determined, simply copy the
-     string.  */
-  if (!lc_ctype)
-    {
-      if (! lc_ctype_unknown_warning)
-	{
-	  fprintf (stderr, "%s: no LC_CTYPE known - assuming UTF-8\n",
-		   this_pgmname);
-	  lc_ctype_unknown_warning = 1;
-	}
-      output_buf = secure? secmem_malloc (input_len) : malloc (input_len);
-      if (output_buf)
-        strcpy (output_buf, input);
-      return output_buf;
-    }
-
-  old_ctype = strdup (setlocale (LC_CTYPE, NULL));
-  if (!old_ctype)
-    return NULL;
-  setlocale (LC_CTYPE, lc_ctype);
-  source_encoding = nl_langinfo (CODESET);
-  setlocale (LC_CTYPE, old_ctype);
-  free (old_ctype);
-
-  /* This is overkill, but simplifies the iconv invocation greatly.  */
-  output_len = input_len * MB_LEN_MAX;
-  output_buf = output = secure? secmem_malloc (output_len):malloc (output_len);
-  if (!output)
-    return NULL;
-
-  cd = iconv_open ("UTF-8", source_encoding);
-  if (cd == (iconv_t) -1)
-    {
-      fprintf (stderr, "%s: can't convert from %s to UTF-8: %s\n",
-               this_pgmname, source_encoding? source_encoding : "?",
-               strerror (errno));
-      if (secure)
-        secmem_free (output_buf);
-      else
-        free (output_buf);
-      return NULL;
-    }
-  processed = iconv (cd, (ICONV_CONST char **)&input, &input_len,
-                     &output, &output_len);
-  iconv_close (cd);
-  if (processed == (size_t) -1 || input_len)
-    {
-      fprintf (stderr, "%s: error converting from %s to UTF-8: %s\n",
-               this_pgmname, source_encoding? source_encoding : "?",
-               strerror (errno));
-      if (secure)
-        secmem_free (output_buf);
-      else
-        free (output_buf);
-      return NULL;
-    }
-  return output_buf;
-}
-#endif /*WITH_UTF8_CONVERSION*/
-
-
 /* Copy TEXT or TEXTLEN to BUFFER and escape as required.  Return a
    pointer to the end of the new buffer.  Note that BUFFER must be
    large enough to keep the entire text; allocataing it 3 times of
@@ -411,6 +267,32 @@ copy_and_escape (char *buffer, const void *text, size_t textlen)
 }
 
 
+/* Perform percent unescaping in STRING and return the new valid length
+   of the string.  A terminating Nul character is inserted at the end of
+   the unescaped string.
+ */
+static size_t
+do_unescape_inplace (char *s)
+{
+  unsigned char *p, *p0;
+
+  p = p0 = s;
+  while (*s)
+    {
+      if (*s == '%' && s[1] && s[2])
+        {
+          s++;
+          *p++ = xtoi_2 (s);
+          s += 2;
+        }
+      else
+        *p++ = *s++;
+    }
+  *p = 0;
+
+  return (p - p0);
+}
+
 
 /* Return a malloced copy of the commandline for PID.  If this is not
  * possible NULL is returned.  */
@@ -423,7 +305,6 @@ get_cmdline (unsigned long pid)
   size_t i, n;
 
   snprintf (buffer, sizeof buffer, "/proc/%lu/cmdline", pid);
-  buffer[sizeof buffer - 1] = 0;
 
   fp = fopen (buffer, "rb");
   if (!fp)
@@ -469,7 +350,6 @@ get_pid_name_for_uid (unsigned long pid, int uid)
   char *uidstr;
 
   snprintf (buffer, sizeof buffer, "/proc/%lu/status", pid);
-  buffer[sizeof buffer - 1] = 0;
 
   fp = fopen (buffer, "rb");
   if (!fp)
@@ -484,6 +364,7 @@ get_pid_name_for_uid (unsigned long pid, int uid)
   fclose (fp);
   if (n == 0)
     return NULL;
+  buffer[n] = 0;
   /* Fixme: Is it specified that "Name" is always the first line?  For
    * robustness I would prefer to have a real parser here. -wk  */
   if (strncmp (buffer, "Name:\t", 6))
@@ -501,6 +382,13 @@ get_pid_name_for_uid (unsigned long pid, int uid)
   return strdup (buffer + 6);
 }
 #endif /*!HAVE_W32_SYSTEM*/
+
+
+const char *
+pinentry_get_pgmname (void)
+{
+  return this_pgmname;
+}
 
 
 /* Return a malloced string with the title.  The caller mus free the
@@ -522,7 +410,7 @@ pinentry_get_title (pinentry_t pe)
       char *cmdline = NULL;
 
       if (pe->owner_host &&
-          !uname (&utsbuf) && utsbuf.nodename &&
+          !uname (&utsbuf) &&
           !strcmp (utsbuf.nodename, pe->owner_host))
         {
           pidname = get_pid_name_for_uid (pe->owner_pid, pe->owner_uid);
@@ -539,7 +427,6 @@ pinentry_get_title (pinentry_t pe)
       else
         snprintf (buf, sizeof buf, "[%lu] <unknown host>",
                   pe->owner_pid);
-      buf[sizeof buf - 1] = 0;
       free (pidname);
       free (cmdline);
       title = strdup (buf);
@@ -626,6 +513,71 @@ pinentry_inq_quality (pinentry_t pin, const char *passphrase, size_t length)
   return value;
 }
 
+
+/* Run a checkpin inquiry */
+char *
+pinentry_inq_checkpin (pinentry_t pin, const char *passphrase, size_t length)
+{
+  assuan_context_t ctx = pin->ctx_assuan;
+  const char prefix[] = "INQUIRE CHECKPIN ";
+  char *command;
+  char *line;
+  size_t linelen;
+  int gotvalue = 0;
+  char *value = NULL;
+  int rc;
+
+  if (!ctx)
+    return 0; /* Can't run the callback.  */
+
+  if (length > 300)
+    length = 300;  /* Limit so that it definitely fits into an Assuan
+                      line.  */
+
+  command = secmem_malloc (strlen (prefix) + 3*length + 1);
+  if (!command)
+    return 0;
+  strcpy (command, prefix);
+  copy_and_escape (command + strlen(command), passphrase, length);
+  rc = assuan_write_line (ctx, command);
+  secmem_free (command);
+  if (rc)
+    {
+      fprintf (stderr, "ASSUAN WRITE LINE failed: rc=%d\n", rc);
+      return 0;
+    }
+
+  for (;;)
+    {
+      do
+        {
+          rc = assuan_read_line (ctx, &line, &linelen);
+          if (rc)
+            {
+              fprintf (stderr, "ASSUAN READ LINE failed: rc=%d\n", rc);
+              return 0;
+            }
+        }
+      while (*line == '#' || !linelen);
+      if (line[0] == 'E' && line[1] == 'N' && line[2] == 'D'
+          && (!line[3] || line[3] == ' '))
+        break; /* END command received*/
+      if (line[0] == 'C' && line[1] == 'A' && line[2] == 'N'
+          && (!line[3] || line[3] == ' '))
+        break; /* CAN command received*/
+      if (line[0] == 'E' && line[1] == 'R' && line[2] == 'R'
+          && (!line[3] || line[3] == ' '))
+        break; /* ERR command received*/
+      if (line[0] != 'D' || line[1] != ' ' || linelen < 3 || gotvalue)
+        continue;
+      gotvalue = 1;
+      value = strdup (line + 2);
+    }
+
+  return value;
+}
+
+
 /* Run a genpin inquiry */
 char *
 pinentry_inq_genpin (pinentry_t pin)
@@ -656,6 +608,7 @@ pinentry_inq_genpin (pinentry_t pin)
           if (rc)
             {
               fprintf (stderr, "ASSUAN READ LINE failed: rc=%d\n", rc);
+              free (value);
               return 0;
             }
         }
@@ -871,7 +824,6 @@ my_strusage( int level )
               {
                 snprintf (str, n, "Usage: %s [options] (-h for help)",
                           this_pgmname);
-                str[n-1] = 0;
               }
           }
         p = str;
@@ -1247,6 +1199,12 @@ option_handler (assuan_context_t ctx, const char *key, const char *value)
       if (!pinentry.default_tt_hide)
 	return gpg_error_from_syserror ();
     }
+  else if (!strcmp (key, "default-capshint"))
+    {
+      pinentry.default_capshint = strdup (value);
+      if (!pinentry.default_capshint)
+	return gpg_error_from_syserror ();
+    }
   else if (!strcmp (key, "allow-external-password-cache") && !*value)
     {
       pinentry.allow_external_password_cache = 1;
@@ -1265,6 +1223,48 @@ option_handler (assuan_context_t ctx, const char *key, const char *value)
       pinentry.invisible_char = strdup (value);
       if (!pinentry.invisible_char)
 	return gpg_error_from_syserror ();
+    }
+  else if (!strcmp (key, "formatted-passphrase") && !*value)
+    {
+      pinentry.formatted_passphrase = 1;
+    }
+  else if (!strcmp (key, "formatted-passphrase-hint"))
+    {
+      if (pinentry.formatted_passphrase_hint)
+        free (pinentry.formatted_passphrase_hint);
+      pinentry.formatted_passphrase_hint = strdup (value);
+      if (!pinentry.formatted_passphrase_hint)
+	return gpg_error_from_syserror ();
+      do_unescape_inplace(pinentry.formatted_passphrase_hint);
+    }
+  else if (!strcmp (key, "constraints-enforce") && !*value)
+    pinentry.constraints_enforce = 1;
+  else if (!strcmp (key, "constraints-hint-short"))
+    {
+      if (pinentry.constraints_hint_short)
+        free (pinentry.constraints_hint_short);
+      pinentry.constraints_hint_short = strdup (value);
+      if (!pinentry.constraints_hint_short)
+	return gpg_error_from_syserror ();
+      do_unescape_inplace(pinentry.constraints_hint_short);
+    }
+  else if (!strcmp (key, "constraints-hint-long"))
+    {
+      if (pinentry.constraints_hint_long)
+        free (pinentry.constraints_hint_long);
+      pinentry.constraints_hint_long = strdup (value);
+      if (!pinentry.constraints_hint_long)
+	return gpg_error_from_syserror ();
+      do_unescape_inplace(pinentry.constraints_hint_long);
+    }
+  else if (!strcmp (key, "constraints-error-title"))
+    {
+      if (pinentry.constraints_error_title)
+        free (pinentry.constraints_error_title);
+      pinentry.constraints_error_title = strdup (value);
+      if (!pinentry.constraints_error_title)
+	return gpg_error_from_syserror ();
+      do_unescape_inplace(pinentry.constraints_error_title);
     }
   else
     return gpg_error (GPG_ERR_UNKNOWN_OPTION);
@@ -1309,7 +1309,6 @@ write_status_error (assuan_context_t ctx, pinentry_t pe)
             pe->specific_err_loc? pe->specific_err_loc : "?",
             pe->specific_err,
             pe->specific_err_info? pe->specific_err_info : "");
-  buf[sizeof buf -1] = 0;
   assuan_write_status (ctx, "ERROR", buf);
 }
 
@@ -1728,9 +1727,11 @@ cmd_getpin (assuan_context_t ctx, char *line)
     {
       if (pinentry.repeat_okay)
         assuan_write_status (ctx, "PIN_REPEATED", "");
+      assuan_begin_confidential (ctx);
       result = assuan_send_data (ctx, pinentry.pin, strlen(pinentry.pin));
       if (!result)
 	result = assuan_send_data (ctx, NULL, 0);
+      assuan_end_confidential (ctx);
 
       if (/* GPG Agent says it's okay.  */
 	  pinentry.allow_external_password_cache && pinentry.keyinfo
@@ -1866,7 +1867,6 @@ cmd_getinfo (assuan_context_t ctx, char *line)
     {
 
       snprintf (buffer, sizeof buffer, "%lu", (unsigned long)getpid ());
-      buffer[sizeof buffer -1] = 0;
       rc = assuan_send_data (ctx, buffer, strlen (buffer));
     }
   else if (!strcmp (line, "flavor"))
@@ -1880,7 +1880,6 @@ cmd_getinfo (assuan_context_t ctx, char *line)
                 s,
                 flavor_flag? ":":"",
                 flavor_flag? flavor_flag : "");
-      buffer[sizeof buffer -1] = 0;
       rc = assuan_send_data (ctx, buffer, strlen (buffer));
       /* if (!rc) */
       /*   rc = assuan_write_status (ctx, "FEATURES", "tabbing foo bar"); */
@@ -1906,7 +1905,6 @@ cmd_getinfo (assuan_context_t ctx, char *line)
 #endif
                 emacs_status
                 );
-      buffer[sizeof buffer -1] = 0;
       rc = assuan_send_data (ctx, buffer, strlen (buffer));
     }
   else
