@@ -18,7 +18,7 @@ static unsigned int alphas[SchemeLast][2] = {
 
 static const char *position = "center";
 static const char *fonts[] = {
-    "DejaVuSansMono Nerd Font Mono:pixelsize=16"
+    "DejaVuSansM Nerd Font Mono:pixelsize=16"
 };
 static const char *prompt = NULL;
 static const char *asterisk = "*";
