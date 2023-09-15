@@ -1,22 +1,7 @@
-.ie "\f[CB]x\f[]"x" \{\
-. ftr V B
-. ftr VI BI
-. ftr VB B
-. ftr VBI BI
-.\}
-.el \{\
-. ftr V CR
-. ftr VI CI
-. ftr VB CB
-. ftr VBI CBI
-.\}
 .TH "PINENTRY-DMENU" "1" "" "Version-VERSION" "pinentry-dmenu Manual"
-.hy
 .SH NAME
-.PP
 pinentry-dmenu - a pinentry program based on dmenu
 .SH SYNOPSIS
-.PP
 Set the \f[B]pinentry-program\f[R] in
 \f[I]\[ti]/.gnupg/gpg-agent.conf\f[R] to \f[B]pinentry-dmenu\f[R] to use
 the program as the regular dialog for \f[B]gpg-agent\f[R].
@@ -26,7 +11,6 @@ The configuration is placed in
 You can change the path to the config file with the environment variable
 \f[I]GNUPGHOME\f[R].
 .SH DESCRIPTION
-.PP
 \f[B]pinentry-dmenu\f[R] is a dmenu- and pinentry-based passphrase
 dialog called from the \f[B]gpg-agent\f[R](1) daemon.
 It is not intended to be invoked directly.
@@ -118,7 +102,6 @@ Defines the description foreground color.
 \f[B]desc_bg\f[R] = \f[I]\[lq]#4185d7\[rq]\f[R]
 Defines the description background color.
 .SH USAGE
-.PP
 \f[B]pinentry-dmenu\f[R] is completely controlled by the keyboard.
 .TP
 \f[B]Return\f[R]
@@ -327,7 +310,6 @@ desc_fg = \[lq]#cccccc\[rq];
 .PD
 desc_bg = \[lq]#4185d7\[rq];
 .SH BUGS
-.PP
 See GitHub Issues:
 \f[I]https://github.com/mrdotx/pinentry-dmenu/issues\f[R]
 .SH AUTHORS
@@ -341,8 +323,6 @@ See GitHub Issues:
 \f[B]pinentry-dmenu\f[R] was written by mrdotx
 <\f[I]klassiker\[at]gmx.de\f[R]>
 .SH SEE ALSO
-.PP
 \f[B]dmenu\f[R](1), \f[B]dwm\f[R](1), \f[B]gpg-agent\f[R](1)
 .SH LICENSE
-.PP
 See the \f[I]LICENSE.md\f[R] file for the terms of redistribution.
