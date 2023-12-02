@@ -61,7 +61,7 @@ The configuration is placed in *~/.gnupg/pinentry-dmenu.conf*. You can change th
 **position** = *"center"*
 : Defines the position of the menu. *bottom*, *center* and *top* are supported.
 
-**font** = *"DejaVuSansM Nerd Font Mono:pixelsize=16"*
+**font** = *"DejaVuSansM Nerd Font:pixelsize=16"*
 : Defines the font or font set used.
 
 **prompt** = *""*
