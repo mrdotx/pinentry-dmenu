@@ -4,7 +4,7 @@
 static unsigned int mon = -1;
 static unsigned int centerwidth = 1024;
 static unsigned int embedded = 0;
-static unsigned int lineheight = 25;
+static unsigned int lineheight = 24;
 static unsigned int borderwidth = 1;
 static unsigned int minpwlen = 32;
 static unsigned int alphas[SchemeLast][2] = {
