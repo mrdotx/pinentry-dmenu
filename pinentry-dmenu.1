@@ -1,29 +1,29 @@
-.TH "PINENTRY-DMENU" "1" "" "Version-VERSION" "pinentry-dmenu Manual"
+.TH "PINENTRY\-DMENU" "1" "" "Version\-VERSION" "pinentry\-dmenu Manual"
 .SH NAME
-pinentry-dmenu - a pinentry program based on dmenu
+pinentry\-dmenu \- a pinentry program based on dmenu
 .SH SYNOPSIS
-Set the \f[B]pinentry-program\f[R] in
-\f[I]\[ti]/.gnupg/gpg-agent.conf\f[R] to \f[B]pinentry-dmenu\f[R] to use
-the program as the regular dialog for \f[B]gpg-agent\f[R].
+Set the \f[B]pinentry\-program\f[R] in
+\f[I]\[ti]/.gnupg/gpg\-agent.conf\f[R] to \f[B]pinentry\-dmenu\f[R] to
+use the program as the regular dialog for \f[B]gpg\-agent\f[R].
 .PP
 The configuration is placed in
-\f[I]\[ti]/.gnupg/pinentry-dmenu.conf\f[R].
+\f[I]\[ti]/.gnupg/pinentry\-dmenu.conf\f[R].
 You can change the path to the config file with the environment variable
 \f[I]GNUPGHOME\f[R].
 .SH DESCRIPTION
-\f[B]pinentry-dmenu\f[R] is a dmenu- and pinentry-based passphrase
-dialog called from the \f[B]gpg-agent\f[R](1) daemon.
+\f[B]pinentry\-dmenu\f[R] is a dmenu\- and pinentry\-based passphrase
+dialog called from the \f[B]gpg\-agent\f[R](1) daemon.
 It is not intended to be invoked directly.
 .SH OPTIONS
 .TP
-\f[B]monitor\f[R] = \f[I]-1\f[R]
-pinentry-dmenu is displayed on the monitor number supplied.
+\f[B]monitor\f[R] = \f[I]\-1\f[R]
+pinentry\-dmenu is displayed on the monitor number supplied.
 Monitor numbers are starting from 0.
-Value -1 for focused monitor.
+Value \-1 for focused monitor.
 .TP
 \f[B]center_width\f[R] = \f[I]1024\f[R]
 Defines the width for the `center' menu.
-Value -1 for full width.
+Value \-1 for full width.
 .TP
 \f[B]embedded\f[R] = \f[I]false\f[R]
 Embed into window.
@@ -102,21 +102,21 @@ Defines the description foreground color.
 \f[B]desc_bg\f[R] = \f[I]\[lq]#4185d7\[rq]\f[R]
 Defines the description background color.
 .SH USAGE
-\f[B]pinentry-dmenu\f[R] is completely controlled by the keyboard.
+\f[B]pinentry\-dmenu\f[R] is completely controlled by the keyboard.
 .TP
 \f[B]Return\f[R]
 Confirm input
 .TP
-\f[B]Ctrl-Return\f[R]
+\f[B]Ctrl\-Return\f[R]
 Confirm input
 .TP
-\f[B]Shift-Return\f[R]
+\f[B]Shift\-Return\f[R]
 Confirm input
 .TP
 \f[B]Escape\f[R]
 Cancel input
 .TP
-\f[B]C-c\f[R]
+\f[B]C\-c\f[R]
 Escape
 .PP
 \f[B]\f[BI]Confirm Mode\f[B]\f[R]
@@ -177,38 +177,38 @@ Move cursor to the line end
 \f[B]Home\f[R]
 Move cursor to the line begin
 .TP
-\f[B]C-a\f[R]
+\f[B]C\-a\f[R]
 Home
 .TP
-\f[B]C-b\f[R]
+\f[B]C\-b\f[R]
 Left
 .TP
-\f[B]C-d\f[R]
+\f[B]C\-d\f[R]
 Delete
 .TP
-\f[B]C-e\f[R]
+\f[B]C\-e\f[R]
 End
 .TP
-\f[B]C-f\f[R]
+\f[B]C\-f\f[R]
 Right
 .TP
-\f[B]C-g\f[R]
+\f[B]C\-g\f[R]
 Escape
 .TP
-\f[B]C-h\f[R]
+\f[B]C\-h\f[R]
 Backspace
 .TP
-\f[B]C-k\f[R]
+\f[B]C\-k\f[R]
 Delete line right
 .TP
-\f[B]C-u\f[R]
+\f[B]C\-u\f[R]
 Delete line left
 .TP
-\f[B]C-v\f[R]
+\f[B]C\-v\f[R]
 Paste from primary X selection
 .SH EXAMPLES
 .PP
-monitor = -1;
+monitor = \-1;
 .PD 0
 .P
 .PD
@@ -311,18 +311,18 @@ desc_fg = \[lq]#cccccc\[rq];
 desc_bg = \[lq]#4185d7\[rq];
 .SH BUGS
 See GitHub Issues:
-\f[I]https://github.com/mrdotx/pinentry-dmenu/issues\f[R]
+\f[I]https://github.com/mrdotx/pinentry\-dmenu/issues\f[R]
 .SH AUTHORS
 .PP
-\f[B]pinentry-dmenu\f[R] is a fork of \f[B]dmenu\f[R]
+\f[B]pinentry\-dmenu\f[R] is a fork of \f[B]dmenu\f[R]
 <\f[I]https://tools.suckless.org/dmenu\f[R]> and uses the api of
 \f[B]pinentry\f[R], a GnuPG tool.
 .PD 0
 .P
 .PD
-\f[B]pinentry-dmenu\f[R] was written by mrdotx
+\f[B]pinentry\-dmenu\f[R] was written by mrdotx
 <\f[I]klassiker\[at]gmx.de\f[R]>
 .SH SEE ALSO
-\f[B]dmenu\f[R](1), \f[B]dwm\f[R](1), \f[B]gpg-agent\f[R](1)
+\f[B]dmenu\f[R](1), \f[B]dwm\f[R](1), \f[B]gpg\-agent\f[R](1)
 .SH LICENSE
 See the \f[I]LICENSE.md\f[R] file for the terms of redistribution.
