@@ -24,7 +24,7 @@
 #include "util.h"
 
 #include "pinentry/pinentry.h"
-#include "pinentry/memory.h"
+#include "pinentry/secmem.h"
 
 #define CONFIG_DIR "/.gnupg"
 #define CONFIG_FILE "/pinentry-dmenu.conf"

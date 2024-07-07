@@ -20,11 +20,10 @@
  */
 
 /* #include <config.h> */
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#ifndef HAVE_W32CE_SYSTEM
 #include <errno.h>
-#endif
 #include <stdarg.h>
 #include <unistd.h>
 #if defined(HAVE_MLOCK) || defined(HAVE_MMAP)
@@ -34,7 +33,7 @@
 #endif
 #include <string.h>
 
-#include "memory.h"
+#include "secmem.h"
 
 #ifdef ORIGINAL_GPG_VERSION
 #include "types.h"
@@ -356,7 +355,9 @@ secmem_realloc( void *p, size_t newsize )
     if (! p)
       return secmem_malloc(newsize);
 
-    mb = (MEMBLOCK*)((char*)p - ((size_t) &((MEMBLOCK*)0)->u.aligned.c));
+    mb = (MEMBLOCK*) (void *) ((char *) p
+                               - offsetof (MEMBLOCK, u.aligned.c));
+
     size = mb->size;
     if( newsize < size )
 	return p; /* it is easier not to shrink the memory */
@@ -377,7 +378,8 @@ secmem_free( void *a )
     if( !a )
 	return;
 
-    mb = (MEMBLOCK*)((char*)a - ((size_t) &((MEMBLOCK*)0)->u.aligned.c));
+    mb = (MEMBLOCK*) (void *) ((char*)a
+                               - offsetof (MEMBLOCK, u.aligned.c));
     size = mb->size;
     /* This does not make much sense: probably this memory is held in the
      * cache. We do it anyway: */
@@ -399,7 +401,7 @@ m_is_secure( const void *p )
 }
 
 void
-secmem_term()
+secmem_term(void)
 {
     if( !pool_okay )
 	return;
@@ -421,7 +423,7 @@ secmem_term()
 
 
 void
-secmem_dump_stats()
+secmem_dump_stats(void)
 {
     if( disable_secmem )
 	return;

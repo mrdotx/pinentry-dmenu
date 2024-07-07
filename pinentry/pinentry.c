@@ -22,9 +22,7 @@
 #include <config.h>
 #endif
 
-#ifndef HAVE_W32CE_SYSTEM
-# include <errno.h>
-#endif
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
@@ -34,17 +32,11 @@
 #ifndef HAVE_W32_SYSTEM
 # include <sys/utsname.h>
 #endif
-#ifndef HAVE_W32CE_SYSTEM
-# include <locale.h>
-#endif
+#include <locale.h>
 #include <limits.h>
-#ifdef HAVE_W32CE_SYSTEM
-# include <windows.h>
-#endif
 
 #include <assuan.h>
 
-#include "memory.h"
 #include "secmem-util.h"
 #include "argparse.h"
 #include "pinentry.h"
@@ -57,9 +49,6 @@
 # include "pinentry-curses.h"
 #endif
 
-#ifdef HAVE_W32CE_SYSTEM
-#define getpid() GetCurrentProcessId ()
-#endif
 
 /* Keep the name of our program here. */
 static char this_pgmname[50];
@@ -117,6 +106,10 @@ pinentry_reset (int use_defaults)
   pinentry_color_t color_bg = pinentry.color_bg;
   pinentry_color_t color_so = pinentry.color_so;
   int color_so_bright = pinentry.color_so_bright;
+  pinentry_color_t color_ok = pinentry.color_ok;
+  int color_ok_bright = pinentry.color_ok_bright;
+  pinentry_color_t color_qualitybar = pinentry.color_qualitybar;
+  int color_qualitybar_bright = pinentry.color_qualitybar_bright;
 
   int timeout = pinentry.timeout;
 
@@ -184,6 +177,10 @@ pinentry_reset (int use_defaults)
       pinentry.color_bg = PINENTRY_COLOR_DEFAULT;
       pinentry.color_so = PINENTRY_COLOR_DEFAULT;
       pinentry.color_so_bright = 0;
+      pinentry.color_ok = PINENTRY_COLOR_DEFAULT;
+      pinentry.color_ok_bright = 0;
+      pinentry.color_qualitybar = PINENTRY_COLOR_DEFAULT;
+      pinentry.color_qualitybar_bright = 0;
 
       pinentry.owner_uid = -1;
     }
@@ -222,6 +219,10 @@ pinentry_reset (int use_defaults)
       pinentry.color_bg = color_bg;
       pinentry.color_so = color_so;
       pinentry.color_so_bright = color_so_bright;
+      pinentry.color_ok = color_ok;
+      pinentry.color_ok_bright = color_ok_bright;
+      pinentry.color_qualitybar = color_qualitybar;
+      pinentry.color_qualitybar_bright = color_qualitybar_bright;
 
       pinentry.timeout = timeout;
     }
@@ -757,9 +758,7 @@ pinentry_have_display (int argc, char **argv)
               remember_display = strdup (argv[1]);
               if (!remember_display)
                 {
-#ifndef HAVE_W32CE_SYSTEM
                   fprintf (stderr, "%s: %s\n", this_pgmname, strerror (errno));
-#endif
                   exit (EXIT_FAILURE);
                 }
             }
@@ -773,9 +772,7 @@ pinentry_have_display (int argc, char **argv)
               remember_display = strdup (*argv+10);
               if (!remember_display)
                 {
-#ifndef HAVE_W32CE_SYSTEM
                   fprintf (stderr, "%s: %s\n", this_pgmname, strerror (errno));
-#endif
                   exit (EXIT_FAILURE);
                 }
             }
@@ -784,14 +781,12 @@ pinentry_have_display (int argc, char **argv)
         }
     }
 
-#ifndef HAVE_W32CE_SYSTEM
   {
     const char *s;
     s = getenv ("DISPLAY");
     if (s && *s)
       found = 1;
   }
-#endif
 
   return found;
 }
@@ -937,9 +932,7 @@ pinentry_parse_opts (int argc, char *argv[])
 	  pinentry.display = strdup (pargs.r.ret_str);
 	  if (!pinentry.display)
 	    {
-#ifndef HAVE_W32CE_SYSTEM
 	      fprintf (stderr, "%s: %s\n", this_pgmname, strerror (errno));
-#endif
 	      exit (EXIT_FAILURE);
 	    }
 	  break;
@@ -947,9 +940,7 @@ pinentry_parse_opts (int argc, char *argv[])
 	  pinentry.ttyname = strdup (pargs.r.ret_str);
 	  if (!pinentry.ttyname)
 	    {
-#ifndef HAVE_W32CE_SYSTEM
 	      fprintf (stderr, "%s: %s\n", this_pgmname, strerror (errno));
-#endif
 	      exit (EXIT_FAILURE);
 	    }
 	  break;
@@ -957,9 +948,7 @@ pinentry_parse_opts (int argc, char *argv[])
 	  pinentry.ttytype_l = strdup (pargs.r.ret_str);
 	  if (!pinentry.ttytype_l)
 	    {
-#ifndef HAVE_W32CE_SYSTEM
 	      fprintf (stderr, "%s: %s\n", this_pgmname, strerror (errno));
-#endif
 	      exit (EXIT_FAILURE);
 	    }
 	  break;
@@ -967,9 +956,7 @@ pinentry_parse_opts (int argc, char *argv[])
 	  pinentry.lc_ctype = strdup (pargs.r.ret_str);
 	  if (!pinentry.lc_ctype)
 	    {
-#ifndef HAVE_W32CE_SYSTEM
 	      fprintf (stderr, "%s: %s\n", this_pgmname, strerror (errno));
-#endif
 	      exit (EXIT_FAILURE);
 	    }
 	  break;
@@ -977,9 +964,7 @@ pinentry_parse_opts (int argc, char *argv[])
 	  pinentry.lc_messages = strdup (pargs.r.ret_str);
 	  if (!pinentry.lc_messages)
 	    {
-#ifndef HAVE_W32CE_SYSTEM
 	      fprintf (stderr, "%s: %s\n", this_pgmname, strerror (errno));
-#endif
 	      exit (EXIT_FAILURE);
 	    }
 	  break;
@@ -996,6 +981,10 @@ pinentry_parse_opts (int argc, char *argv[])
             tmpstr = parse_color (tmpstr, &pinentry.color_bg, NULL);
             tmpstr = parse_color (tmpstr, &pinentry.color_so,
                                   &pinentry.color_so_bright);
+            tmpstr = parse_color (tmpstr, &pinentry.color_ok,
+                                  &pinentry.color_ok_bright);
+            tmpstr = parse_color (tmpstr, &pinentry.color_qualitybar,
+                                  &pinentry.color_qualitybar_bright);
           }
 	  break;
 
@@ -1007,9 +996,7 @@ pinentry_parse_opts (int argc, char *argv[])
 	  pinentry.ttyalert = strdup (pargs.r.ret_str);
 	  if (!pinentry.ttyalert)
 	    {
-#ifndef HAVE_W32CE_SYSTEM
 	      fprintf (stderr, "%s: %s\n", this_pgmname, strerror (errno));
-#endif
 	      exit (EXIT_FAILURE);
 	    }
 	  break;
@@ -1207,7 +1194,9 @@ option_handler (assuan_context_t ctx, const char *key, const char *value)
     }
   else if (!strcmp (key, "allow-external-password-cache") && !*value)
     {
-      pinentry.allow_external_password_cache = 1;
+      char *desktop = getenv ("XDG_SESSION_DESKTOP");
+      char *kde_use_wallet = getenv ("PINENTRY_KDE_USE_WALLET");
+      pinentry.allow_external_password_cache = (!desktop || strcmp (desktop, "KDE") || (kde_use_wallet && *kde_use_wallet));
       pinentry.tried_password_cache = 0;
     }
   else if (!strcmp (key, "allow-emacs-prompt") && !*value)
@@ -1386,6 +1375,23 @@ cmd_setrepeat (assuan_context_t ctx, char *line)
   strcpy_escaped (p, line);
   free (pinentry.repeat_passphrase);
   pinentry.repeat_passphrase = p;
+  return 0;
+}
+
+static gpg_error_t
+cmd_setrepeatok (assuan_context_t ctx, char *line)
+{
+  char *p;
+
+  (void)ctx;
+
+  p = malloc (strlen (line) + 1);
+  if (!p)
+    return gpg_error_from_syserror ();
+
+  strcpy_escaped (p, line);
+  free (pinentry.repeat_ok_string);
+  pinentry.repeat_ok_string = p;
   return 0;
 }
 
@@ -1619,6 +1625,8 @@ cmd_getpin (assuan_context_t ctx, char *line)
   if (!pinentry.pin)
     return gpg_error (GPG_ERR_ENOMEM);
 
+  pinentry.confirm = 0;
+
   /* Try reading from the password cache.  */
   if (/* If repeat passphrase is set, then we don't want to read from
 	 the cache.  */
@@ -1770,6 +1778,7 @@ cmd_confirm (assuan_context_t ctx, char *line)
   free (pinentry.specific_err_info);
   pinentry.specific_err_info = NULL;
   pinentry.canceled = 0;
+  pinentry.confirm = 1;
   pinentry_setbuffer_clear (&pinentry);
   result = (*pinentry_cmd_handler) (&pinentry);
   if (pinentry.error)
@@ -1954,6 +1963,7 @@ register_commands (assuan_context_t ctx)
       { "SETKEYINFO", cmd_setkeyinfo },
       { "SETREPEAT",  cmd_setrepeat },
       { "SETREPEATERROR", cmd_setrepeaterror },
+      { "SETREPEATOK", cmd_setrepeatok},
       { "SETERROR",   cmd_seterror },
       { "SETOK",      cmd_setok },
       { "SETNOTOK",   cmd_setnotok },

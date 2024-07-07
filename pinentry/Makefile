@@ -10,7 +10,7 @@ all: pinentry
 	@echo CC $<
 	@${CC} -c ${CFLAGS} $<
 
-${OBJ}: pinentry.h argparse.h password-cache.h memory.h util.h
+${OBJ}: pinentry.h argparse.h password-cache.h secmem.h util.h
 
 pinentry: pinentry.o argparse.o password-cache.o secmem.o util.o
 
