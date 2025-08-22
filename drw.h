@@ -1,32 +1,32 @@
 /* See LICENSE file for copyright and license details. */
 
 typedef struct {
-    Cursor cursor;
+	Cursor cursor;
 } Cur;
 
 typedef struct Fnt {
-    Display *dpy;
-    unsigned int h;
-    XftFont *xfont;
-    FcPattern *pattern;
-    struct Fnt *next;
+	Display *dpy;
+	unsigned int h;
+	XftFont *xfont;
+	FcPattern *pattern;
+	struct Fnt *next;
 } Fnt;
 
 enum { ColFg, ColBg }; /* Clr scheme index */
 typedef XftColor Clr;
 
 typedef struct {
-    unsigned int w, h;
-    Display *dpy;
-    int screen;
-    Window root;
-    Visual *visual;
-    unsigned int depth;
-    Colormap cmap;
-    Drawable drawable;
-    GC gc;
-    Clr *scheme;
-    Fnt *fonts;
+	unsigned int w, h;
+	Display *dpy;
+	int screen;
+	Window root;
+	Visual *visual;
+	unsigned int depth;
+	Colormap cmap;
+	Drawable drawable;
+	GC gc;
+	Clr *scheme;
+	Fnt *fonts;
 } Drw;
 
 /* Drawable abstraction */
