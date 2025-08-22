@@ -3,11 +3,11 @@
 pinentry\-dmenu \- a pinentry program based on dmenu
 .SH SYNOPSIS
 Set the \f[B]pinentry\-program\f[R] in
-\f[I]\[ti]/.gnupg/gpg\-agent.conf\f[R] to \f[B]pinentry\-dmenu\f[R] to
+\f[I]\(ti/.gnupg/gpg\-agent.conf\f[R] to \f[B]pinentry\-dmenu\f[R] to
 use the program as the regular dialog for \f[B]gpg\-agent\f[R].
 .PP
 The configuration is placed in
-\f[I]\[ti]/.gnupg/pinentry\-dmenu.conf\f[R].
+\f[I]\(ti/.gnupg/pinentry\-dmenu.conf\f[R].
 You can change the path to the config file with the environment variable
 \f[I]GNUPGHOME\f[R].
 .SH DESCRIPTION
@@ -25,82 +25,82 @@ Value \-1 for focused monitor.
 Defines the width for the `center' menu.
 Value \-1 for full width.
 .TP
-\f[B]embedded\f[R] = \f[I]false\f[R]
-Embed into window.
-.TP
-\f[B]line_height\f[R] = \f[I]25\f[R]
+\f[B]line_height\f[R] = \f[I]24\f[R]
 Defines menu line of at least `line_height' pixels tall.
 .TP
 \f[B]border_width\f[R] = \f[I]1\f[R]
 Defines the border width for the menu.
 .TP
+\f[B]position\f[R] = \f[I]\(lqcenter\(rq\f[R]
+Defines the position of the menu.
+\f[I]bottom\f[R], \f[I]center\f[R] and \f[I]top\f[R] are supported.
+.TP
+\f[B]embedded\f[R] = \f[I]false\f[R]
+Embed into window.
+.TP
+\f[B]font\f[R] = \f[I]\(lqDejaVuSansM Nerd Font:pixelsize=16\(rq\f[R]
+Defines the font or font set used.
+.TP
+\f[B]prompt\f[R] = \f[I]\(lq\(lq\f[R]
+Defines the prompt to be displayed to the left of the input field.
+.TP
+\f[B]asterisk\f[R] = \f[I]\(lq*\(rq\f[R]
+Defines the symbol which is showed for each typed character.
+.TP
 \f[B]min_password_length\f[R] = \f[I]32\f[R]
 The minimal space of the password field.
 This value has affect to the description field after the password field.
+.TP
+\f[B]prompt_fg\f[R] = \f[I]\(lq#cccccc\(rq\f[R]
+Defines the prompt foreground color.
+\f[I]#RGB\f[R], \f[I]#RRGGBB\f[R] and X color names are supported.
 .TP
 \f[B]prompt_fg_alpha\f[R] = \f[I]255\f[R]
 Defines the prompt foreground alpha value.
 Values between \f[I]0\f[R] (transparent) and \f[I]255\f[R] (opaque) are
 supported.
 .TP
+\f[B]prompt_bg\f[R] = \f[I]\(lq#4185d7\(rq\f[R]
+Defines the prompt background color.
+.TP
 \f[B]prompt_bg_alpha\f[R] = \f[I]255\f[R]
 Defines the prompt background alpha value.
+.TP
+\f[B]normal_fg\f[R] = \f[I]\(lq#cccccc\(rq\f[R]
+Defines the normal foreground color.
 .TP
 \f[B]normal_fg_alpha\f[R] = \f[I]255\f[R]
 Defines the normal foreground alpha value.
 .TP
+\f[B]normal_bg\f[R] = \f[I]\(lq#000000\(rq\f[R]
+Defines the normal background color.
+.TP
 \f[B]normal_bg_alpha\f[R] = \f[I]230\f[R]
 Defines the normal background alpha value.
+.TP
+\f[B]select_fg\f[R] = \f[I]\(lq#ffffff\(rq\f[R]
+Defines the selected foreground color.
 .TP
 \f[B]select_fg_alpha\f[R] = \f[I]255\f[R]
 Defines the selected foreground alpha value.
 .TP
+\f[B]select_bg\f[R] = \f[I]\(lq#4185d7\(rq\f[R]
+Defines the selected background color.
+.TP
 \f[B]select_bg_alpha\f[R] = \f[I]255\f[R]
 Defines the selected background alpha value.
+.TP
+\f[B]desc_fg\f[R] = \f[I]\(lq#cccccc\(rq\f[R]
+Defines the description foreground color.
 .TP
 \f[B]desc_fg_alpha\f[R] = \f[I]255\f[R]
 Defines the description foreground alpha value.
 .TP
+\f[B]desc_bg\f[R] = \f[I]\(lq#4185d7\(rq\f[R]
+Defines the description background color.
+.TP
 \f[B]desc_bg_alpha\f[R] = \f[I]255\f[R]
 Defines the description background alpha value.
-.TP
-\f[B]position\f[R] = \f[I]\[lq]center\[rq]\f[R]
-Defines the position of the menu.
-\f[I]bottom\f[R], \f[I]center\f[R] and \f[I]top\f[R] are supported.
-.TP
-\f[B]font\f[R] = \f[I]\[lq]DejaVuSansM Nerd Font:pixelsize=16\[rq]\f[R]
-Defines the font or font set used.
-.TP
-\f[B]prompt\f[R] = \f[I]\[lq]\[lq]\f[R]
-Defines the prompt to be displayed to the left of the input field.
-.TP
-\f[B]asterisk\f[R] = \f[I]\[lq]*\[rq]\f[R]
-Defines the symbol which is showed for each typed character.
-.TP
-\f[B]prompt_fg\f[R] = \f[I]\[lq]#cccccc\[rq]\f[R]
-Defines the prompt foreground color.
-\f[I]#RGB\f[R], \f[I]#RRGGBB\f[R] and X color names are supported.
-.TP
-\f[B]prompt_bg\f[R] = \f[I]\[lq]#4185d7\[rq]\f[R]
-Defines the prompt background color.
-.TP
-\f[B]normal_fg\f[R] = \f[I]\[lq]#cccccc\[rq]\f[R]
-Defines the normal foreground color.
-.TP
-\f[B]normal_bg\f[R] = \f[I]\[lq]#000000\[rq]\f[R]
-Defines the normal background color.
-.TP
-\f[B]select_fg\f[R] = \f[I]\[lq]#ffffff\[rq]\f[R]
-Defines the selected foreground color.
-.TP
-\f[B]select_bg\f[R] = \f[I]\[lq]#4185d7\[rq]\f[R]
-Defines the selected background color.
-.TP
-\f[B]desc_fg\f[R] = \f[I]\[lq]#cccccc\[rq]\f[R]
-Defines the description foreground color.
-.TP
-\f[B]desc_bg\f[R] = \f[I]\[lq]#4185d7\[rq]\f[R]
-Defines the description background color.
 .SH USAGE
 \f[B]pinentry\-dmenu\f[R] is completely controlled by the keyboard.
 .TP
@@ -209,26 +209,38 @@ Paste from primary X selection
 .SH EXAMPLES
 .PP
 monitor = \-1;
-.PD 0
-.P
-.PD
+.PP
 center_width = 1024;
 .PD 0
 .P
 .PD
-embedded = false;
-.PD 0
-.P
-.PD
-line_height = 25;
+line_height = 24;
 .PD 0
 .P
 .PD
 border_width = 1;
+.PP
+position = \(lqcenter\(rq;
+.PD 0
+.P
+.PD
+embedded = false;
+.PP
+font = \(lqDejaVuSansM Nerd Font:pixelsize=16\(rq;
+.PD 0
+.P
+.PD
+prompt = \(lq\(lq;
+.PD 0
+.P
+.PD
+asterisk = \(lq*\(rq;
 .PD 0
 .P
 .PD
 min_password_length = 32;
+.PP
+prompt_fg = \(lq#cccccc\(rq;
 .PD 0
 .P
 .PD
@@ -236,7 +248,15 @@ prompt_fg_alpha = 255;
 .PD 0
 .P
 .PD
+prompt_bg = \(lq#4185d7\(rq;
+.PD 0
+.P
+.PD
 prompt_bg_alpha = 255;
+.PD 0
+.P
+.PD
+normal_fg = \(lq#cccccc\(rq;
 .PD 0
 .P
 .PD
@@ -244,7 +264,15 @@ normal_fg_alpha = 255;
 .PD 0
 .P
 .PD
+normal_bg = \(lq#000000\(rq;
+.PD 0
+.P
+.PD
 normal_bg_alpha = 230;
+.PD 0
+.P
+.PD
+select_fg = \(lq#ffffff\(rq;
 .PD 0
 .P
 .PD
@@ -252,7 +280,15 @@ select_fg_alpha = 255;
 .PD 0
 .P
 .PD
+select_bg = \(lq#4185d7\(rq;
+.PD 0
+.P
+.PD
 select_bg_alpha = 255;
+.PD 0
+.P
+.PD
+desc_fg = \(lq#cccccc\(rq;
 .PD 0
 .P
 .PD
@@ -260,55 +296,11 @@ desc_fg_alpha = 255;
 .PD 0
 .P
 .PD
+desc_bg = \(lq#4185d7\(rq;
+.PD 0
+.P
+.PD
 desc_bg_alpha = 255;
-.PD 0
-.P
-.PD
-position = \[lq]center\[rq];
-.PD 0
-.P
-.PD
-font = \[lq]DejaVuSansM Nerd Font:pixelsize=16\[rq];
-.PD 0
-.P
-.PD
-prompt = \[lq]\[lq];
-.PD 0
-.P
-.PD
-asterisk = \[lq]*\[rq];
-.PD 0
-.P
-.PD
-prompt_fg = \[lq]#cccccc\[rq];
-.PD 0
-.P
-.PD
-prompt_bg = \[lq]#4185d7\[rq];
-.PD 0
-.P
-.PD
-normal_fg = \[lq]#cccccc\[rq];
-.PD 0
-.P
-.PD
-normal_bg = \[lq]#000000\[rq];
-.PD 0
-.P
-.PD
-select_fg = \[lq]#ffffff\[rq];
-.PD 0
-.P
-.PD
-select_bg = \[lq]#4185d7\[rq];
-.PD 0
-.P
-.PD
-desc_fg = \[lq]#cccccc\[rq];
-.PD 0
-.P
-.PD
-desc_bg = \[lq]#4185d7\[rq];
 .SH BUGS
 See GitHub Issues:
 \f[I]https://github.com/mrdotx/pinentry\-dmenu/issues\f[R]
@@ -321,7 +313,7 @@ See GitHub Issues:
 .P
 .PD
 \f[B]pinentry\-dmenu\f[R] was written by mrdotx
-<\f[I]klassiker\[at]gmx.de\f[R]>
+<\f[I]klassiker\(atgmx.de\f[R]>
 .SH SEE ALSO
 \f[B]dmenu\f[R](1), \f[B]dwm\f[R](1), \f[B]gpg\-agent\f[R](1)
 .SH LICENSE
